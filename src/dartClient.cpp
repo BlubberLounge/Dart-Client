@@ -16,43 +16,30 @@ void dartClient::init()
     
     handleConnection();
 
-
-    ArduinoOTA.begin();
-    server.on("/", []() {
-        #ifdef USE_WWW_AUTH
-            if (!server.authenticate(WWW_USER, WWW_PWD)) {
-                return server.requestAuthentication();
-            }
-        #endif
-
-        server.send(200, "text/plain", "Login OK");
-    });
-    server.begin();
-
-    Serial.print("Open http://");
-    Serial.print(WiFi.localIP());
+    // initilaize all web server routes
+    initServer();
 }
 
 void dartClient::loop()
 {
-    ArduinoOTA.handle();
     server.handleClient();
 }
 
 void dartClient::handleConnection()
 {
     #ifdef USE_WIFI
+        WiFi.hostname(WIFI_HOSTNAME);
+        WiFi.softAPdisconnect(true);
         WiFi.mode(WIFI_STA);
         WiFi.begin(WIFI_SSID, WIFI_PWD);
         if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-            Serial.println("WiFi Connect Failed! Rebooting...");
+            Serial.println("WiFi Connect Failed! Starting in Offline mode...");
             delay(1000);
             // ESP.restart();
         }
+        
+        Serial.print("Open http://");
+        Serial.print(WiFi.localIP());
     #endif
-}
 
-void dartClient::handleAP()
-{
-    
 }

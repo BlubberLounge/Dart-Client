@@ -11,6 +11,7 @@ class dartClient
     // private:
 
     // protected:
+    //     void registerWebRoutes();
 
     public:
         dartClient();
@@ -24,7 +25,7 @@ class dartClient
         void loop();
 
         void handleConnection();
-        void handleAP();
+        void handleWeb();
 };
 
 #endif
