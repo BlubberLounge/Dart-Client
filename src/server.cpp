@@ -1,5 +1,8 @@
 #include "dartClient.h"
 
+#include "html_index.h"
+
+
 void initServer()
 {
     // index
@@ -14,7 +17,10 @@ void initServer()
     {
         server.send(200, "text/plain", "pong");
     });
+    
+    server.onNotFound(serveNotFound);
 
+    // Start server
     server.begin();
 }
 
@@ -27,8 +33,23 @@ void checkAuth()
     #endif
 }
 
+void response(String msg)
+{
+    server.send(200, "text/html", msg);
+}
+
+void responseNotFound(String msg)
+{
+    server.send(404, "text/html", msg);
+}
+
+void serveNotFound()
+{
+    responseNotFound("Route not found");
+}
+
 void serveIndex()
 {
     // response
-    server.send(200, "text/plain", "Login OK");
+    server.send(200, "text/html", (const char*)html_index);
 }

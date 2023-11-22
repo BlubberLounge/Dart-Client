@@ -1,4 +1,6 @@
+#define WLED_DEFINE_GLOBAL_VARS //only in one source file, wled.cpp!
 #include "dartClient.h"
+
 #include <Arduino.h>
 
 
