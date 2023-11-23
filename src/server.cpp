@@ -6,50 +6,30 @@
 void initServer()
 {
     // index
-    server.on("/", HTTP_GET, []()
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
     {
-        checkAuth();  
-        serveIndex();
+        serveIndex(request);
     });
 
     // health / availability check route
-    server.on("/ping", HTTP_GET, []()
+    server.on("/ping", HTTP_GET, [](AsyncWebServerRequest *request)
     {
-        server.send(200, "text/plain", "pong");
+         request->send(200, "text/plain", "pong");
     });
     
-    server.onNotFound(serveNotFound);
+    server.onNotFound( [](AsyncWebServerRequest *request)
+    {
+        request->send(404, "text/plain", "Route not found!");
+    });
 
     // Start server
     server.begin();
 }
 
-void checkAuth()
+void serveIndex(AsyncWebServerRequest *request)
 {
-    #ifdef USE_WWW_AUTH
-        if (!server.authenticate(WWW_USER, WWW_PWD)) {
-            return server.requestAuthentication();
-        }
-    #endif
-}
-
-void response(String msg)
-{
-    server.send(200, "text/html", msg);
-}
-
-void responseNotFound(String msg)
-{
-    server.send(404, "text/html", msg);
-}
-
-void serveNotFound()
-{
-    responseNotFound("Route not found");
-}
-
-void serveIndex()
-{
-    // response
-    server.send(200, "text/html", (const char*)html_index);
+    AsyncWebServerResponse *response;
+    response = request->beginResponse_P(200, "text/html", HTML_index, HTML_index_L);
+    response->addHeader("Content-Encoding","gzip");
+    request->send(response);
 }

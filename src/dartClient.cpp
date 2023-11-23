@@ -1,4 +1,4 @@
-#define WLED_DEFINE_GLOBAL_VARS //only in one source file, wled.cpp!
+#define DEFINE_GLOBAL_VARS //only in one source file, wled.cpp!
 #include "dartClient.h"
 
 #include <Arduino.h>
@@ -24,7 +24,7 @@ void dartClient::init()
 
 void dartClient::loop()
 {
-    server.handleClient();
+    //
 }
 
 void dartClient::handleConnection()

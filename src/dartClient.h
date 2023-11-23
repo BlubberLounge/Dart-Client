@@ -25,7 +25,7 @@
 #include "config.h"
 #include "defaults.h"
 
-GLOBAL_VAR ESP8266WebServer server _INIT_N(((80)));
+GLOBAL_VAR AsyncWebServer server _INIT_N(((80)));
 
 class dartClient
 {

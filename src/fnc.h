@@ -10,10 +10,6 @@
  */
 
 void initServer();
-void checkAuth();
-void response(String msg);
-void responseNotFound(String msg);
-void serveNotFound();
-void serveIndex();
+void serveIndex(AsyncWebServerRequest *request);
 
 #endif
