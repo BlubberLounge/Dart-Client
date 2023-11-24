@@ -25,7 +25,16 @@
 #include "config.h"
 #include "defaults.h"
 
+#define WIFI_CONNECTED (WiFi.status() == WL_CONNECTED)
+
 GLOBAL_VAR AsyncWebServer server _INIT_N(((80)));
+GLOBAL_VAR WiFiClient client;
+GLOBAL_VAR DNSServer dnsServer;
+
+GLOBAL_VAR String escapedMac _INIT("x");
+GLOBAL_VAR char cmDNS[33] _INIT(MDNS_NAME); 
+GLOBAL_VAR bool ap_active _INIT(false);
+
 
 class dartClient
 {
@@ -45,7 +54,8 @@ class dartClient
 
         void init();
         void loop();
-
+        
+        void initConnection();
         void handleConnection();
         void handleWeb();
 };

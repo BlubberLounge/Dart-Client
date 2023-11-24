@@ -9,7 +9,9 @@
  * 
  */
 
+bool isIp(String str);
 void initServer();
+bool captivePortal(AsyncWebServerRequest *request);
 void serveIndex(AsyncWebServerRequest *request);
 
 #endif
