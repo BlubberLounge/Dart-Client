@@ -53,12 +53,29 @@ void initServer()
     // health / availability check route
     server.on("/ping", HTTP_GET, [](AsyncWebServerRequest *request)
     {
-         request->send(200, "text/plain", "pong");
+        request->send(200, "text/plain", "pong");
+    });
+
+    server.on("/uptime", HTTP_GET, [](AsyncWebServerRequest *request)
+    {
+        request->send(200, "text/plain", (String)millis());
+    });
+
+    server.on("/freeheap", HTTP_GET, [](AsyncWebServerRequest *request)
+    {
+        request->send(200, "text/plain", (String)ESP.getFreeHeap());
     });
 
     server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request)
     {
         if(!handleFileRead(request, "/favicon.ico")) request->send_P(200, "image/x-icon", favicon, 156);
+    });
+
+    server.on("/normalize.css", HTTP_GET, [](AsyncWebServerRequest *request)
+    {
+        AsyncWebServerResponse *response = request->beginResponse_P(200, "text/css", HTML_normalizeCSS, HTML_normalizeCSS_length);
+        response->addHeader("Content-Encoding","gzip");
+        request->send(response);
     });
 
     server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request)
@@ -67,10 +84,23 @@ void initServer()
         response->addHeader("Content-Encoding","gzip");
         request->send(response);
     });
+
+    server.on("^\\api\\/v1\\/dart\\/game\\/[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?$", HTTP_GET, [] (AsyncWebServerRequest *request)
+    {
+        String sensorId = request->pathArg(0);
+        request->send(200, "text/plain", sensorId);
+    });
     
     server.onNotFound( [](AsyncWebServerRequest *request)
     {
-        request->send(404, "text/plain", "Route not found!");
+        if (request->method() == HTTP_OPTIONS) {
+            AsyncWebServerResponse *response = request->beginResponse(200);
+            response->addHeader(F("Access-Control-Max-Age"), F("7200"));
+            request->send(response);
+            return;
+        } else {
+            request->send(404, "text/plain", "Route not found!");
+        }
     });
 
     // Start server
@@ -93,7 +123,6 @@ bool captivePortal(AsyncWebServerRequest *request)
 
   return false;
 }
-
 
 void serveIndex(AsyncWebServerRequest *request)
 {

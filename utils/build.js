@@ -222,6 +222,12 @@ writeChunks(
     "src/web",
     [
         {
+            file: "normalize.css",
+            name: "HTML_normalizeCSS",
+            method: "gzip",
+            filter: "css-minify",
+        },        
+        {
             file: "style.css",
             name: "HTML_styleCSS",
             method: "gzip",
