@@ -3,3 +3,17 @@ body {
     background-color: #1E1E1E;
     font-family: Verdana, sans-serif;
 }
+
+.container {
+    display: flex;
+}
+
+.container.center {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden {
+    display: none;
+}

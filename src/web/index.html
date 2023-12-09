@@ -10,16 +10,26 @@
     <link rel="stylesheet" href="style.css">
 
     <!-- scripts -->
+    <script defer src="consoleText.js"></script>
     <script defer src="script.js"></script>
-    
+
 </head>
 <body>
     <h1 style="text-align:center;">
         Dart-Client
     </h1>
 
-    <div>
-        <button id="btn-newGame"> new game </button>
+    <div id="app">
+        <div id="page-index">
+            <div class="container center">
+                <button id="btn-newGame"> new game </button>
+            </div>
+        </div>
+        <div id="page-newGame" class="hidden">
+            <div class="container center">
+                <button> scan QR code </button>
+            </div>
+        </div>
     </div>
 </body>
 </html>
