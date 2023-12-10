@@ -31,9 +31,13 @@
   "homepage": "https://github.com/BlubberLounge/Dart-Client#readme",
   "dependencies": {
     "clean-css": "^4.2.3",
+    "d3": "^7.8.5",
     "html-minifier-terser": "^5.1.1",
     "inliner": "^1.13.1",
     "nodemon": "^2.0.20",
     "zlib": "^1.0.5"
+  },
+  "devDependencies": {
+    "html5-qrcode": "^2.3.8"
   }
 }

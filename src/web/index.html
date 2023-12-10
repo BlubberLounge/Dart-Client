@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style.css">
 
     <!-- scripts -->
+    <script defer src="IEC7064.js"></script>
     <script defer src="consoleText.js"></script>
     <script defer src="script.js"></script>
 
@@ -25,10 +26,18 @@
                 <button id="btn-newGame"> new game </button>
             </div>
         </div>
-        <div id="page-newGame" class="hidden">
-            <div class="container center">
-                <button> scan QR code </button>
-            </div>
+        <div id="page-createGame" class="hidden">
+            <form action="/create" method="POST" class="container center">
+                <ol id="playerlist">
+
+                </ol>
+                <div style="margin-bottom: 1rem;">
+                    <input type="text" id="newPlayerCode" placeholder="Enter player code" maxlength="10">
+                    <input type="text" id="newPlayerName" placeholder="Enter player name" maxlength="50">
+                    <button id="btn-addPlayer"> Add </button>
+                </div>
+                <button id="btn-startGame"> Start game </button>
+            </form>
         </div>
     </div>
 </body>

@@ -5,7 +5,7 @@
 
 
 /**
- *  Constructor 
+ *  Constructor
  */
 dartClient::dartClient()
 {
@@ -15,12 +15,12 @@ dartClient::dartClient()
 void dartClient::init()
 {
     Serial.begin(115200);
-    
+
     Serial.println();
     Serial.print(F("esp8266 "));
     Serial.println(ESP.getCoreVersion());
     wifi_set_sleep_type(NONE_SLEEP_T);
-  
+
     initConnection();
 
     // initilaize all web server routes
@@ -57,20 +57,20 @@ void dartClient::initConnection()
     WiFi.softAPdisconnect(true);
     WiFi.mode(WIFI_STA);
     WiFi.begin(WIFI_SSID, WIFI_PWD);
-    if (WiFi.waitForConnectResult(10000) != WL_CONNECTED) {
+    if (WiFi.waitForConnectResult(20000) != WL_CONNECTED) {
         Serial.println("WiFi Connect Failed! Starting in Offline mode...");
 
         WiFi.disconnect(true);
         WiFi.softAPConfig(IPAddress(4, 3, 2, 1), IPAddress(4, 3, 2, 1), IPAddress(255, 255, 255, 0));
 
         Serial.print("Starting AP...");
-        Serial.println(WiFi.softAP("Test", "12345678") ? "Ready" : "Failed!");
+        Serial.println(WiFi.softAP("Nothing to see here", "0hB4by4Tr1ppl3") ? "Ready" : "Failed!");
 
         dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
         dnsServer.start(53, "*", WiFi.softAPIP());
         ap_active = true;
-    } 
-    
+    }
+
     Serial.print("Device IP: ");
     if(ap_active) {
         Serial.println(WiFi.softAPIP());

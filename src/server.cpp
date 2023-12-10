@@ -85,12 +85,25 @@ void initServer()
         request->send(response);
     });
 
-    server.on("^\\api\\/v1\\/dart\\/game\\/[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?$", HTTP_GET, [] (AsyncWebServerRequest *request)
+    server.on("/create", HTTP_POST, [] (AsyncWebServerRequest *request)
+    {
+        String p = "Parameters: ";
+        for(uint8_t i = 0; i < request->params(); i++) {
+            p += request->getParam(i)->name();
+            p += ": ";
+            p += request->getParam(i)->value();
+            p += " - ";
+        }
+
+        request->send(200, "text/plain", p);
+    });
+
+    server.on("^dart\\/game\\/[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?$", HTTP_GET, [] (AsyncWebServerRequest *request)
     {
         String sensorId = request->pathArg(0);
         request->send(200, "text/plain", sensorId);
     });
-    
+
     server.onNotFound( [](AsyncWebServerRequest *request)
     {
         if (request->method() == HTTP_OPTIONS) {
