@@ -11,6 +11,16 @@ dartGame::dartGame()
     //
 }
 
+void dartGame::loadFromFile(String path)
+{
+    // TODO
+}
+
+void dartGame::saveToFile(String path)
+{
+    // TODO
+}
+
 String dartGame::listPlayers()
 {
     String res = "";

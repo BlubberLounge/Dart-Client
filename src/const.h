@@ -6,11 +6,16 @@
  *
  */
 
+
+#include <FS.h>
 #include <LittleFS.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 #include <ESPAsyncWebServer.h>
 #include <DNSServer.h>
+#include <SD.h>
+#include <SPI.h>
+#include <ArduinoJson.h>
 
 #define DART_HOST "http://192.168.178.100:81/"
 #define DART_API_URL DART_HOST + "api/v1/"

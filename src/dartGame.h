@@ -25,6 +25,9 @@ class dartGame
     public:
         dartGame();
 
+        void loadFromFile(String path);
+        void saveToFile(String path);
+
         String listPlayers();
         void addPlayer(String code, String name);
         void removePlayer(String code);

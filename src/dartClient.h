@@ -25,6 +25,7 @@
 #include "config.h"
 #include "defaults.h"
 
+
 #define WIFI_CONNECTED (WiFi.status() == WL_CONNECTED)
 
 GLOBAL_VAR AsyncWebServer server _INIT_N(((80)));
@@ -59,6 +60,7 @@ class dartClient
         void init();
         void loop();
 
+        void initStorage();
         void initConnection();
         void handleConnection();
         void handleWeb();

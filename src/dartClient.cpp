@@ -21,6 +21,7 @@ void dartClient::init()
     Serial.println(ESP.getCoreVersion());
     wifi_set_sleep_type(NONE_SLEEP_T);
 
+    initStorage();
     initConnection();
 
     // initilaize all web server routes
@@ -48,6 +49,34 @@ void dartClient::loop()
     if(ap_active) dnsServer.processNextRequest();
 
     MDNS.update();
+}
+
+void dartClient::initStorage()
+{
+    if(!SD.begin(15)){
+        Serial.println("Card Mount Failed");
+        return;
+    }
+
+    if(!SD.exists("/data"))
+        SD.mkdir("/data");
+
+    DynamicJsonDocument doc(1024);
+    doc["sensor"] = "gps";
+    doc["time"]   = 1351824120;
+    doc["data"][0] = 48.756080;
+    doc["data"][1] = 2.302038;
+
+    File f;
+    f = SD.open("/data/test.json", "w+");
+    serializeJson(doc, f);
+    f.close();
+
+    File root;
+    root = SD.open("/");
+    printDirectory(root, 0);
+
+    SD.remove("/data/test.json");
 }
 
 void dartClient::initConnection()

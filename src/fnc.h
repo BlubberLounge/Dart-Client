@@ -15,4 +15,5 @@ void initServer();
 bool captivePortal(AsyncWebServerRequest *request);
 void serveIndex(AsyncWebServerRequest *request);
 
+void printDirectory(File dir, int numTabs);
 #endif
