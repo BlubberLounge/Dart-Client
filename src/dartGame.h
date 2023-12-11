@@ -1,13 +1,26 @@
+#ifndef dartGame_h
+#define dartGame_h
 
 #include "player.h"
+
+enum class dartGameStatus
+{
+    unkown,
+    created,
+    started,
+    running,
+    done,
+    aborted,
+    error
+};
 
 class dartGame
 {
     private:
-        uint8_t playerCount = 0;
 
     protected:
-        player players[4];
+        std::vector<player> players;
+        dartGameStatus status = dartGameStatus::unkown;
 
     public:
         dartGame();
@@ -16,4 +29,9 @@ class dartGame
         void addPlayer(String code, String name);
         void removePlayer(String code);
         void resetPlayer();
+
+        dartGameStatus getStatus();
+        void setStatus(dartGameStatus status);
 };
+
+#endif

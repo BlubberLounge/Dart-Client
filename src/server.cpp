@@ -1,7 +1,8 @@
 #include "dartClient.h"
 
-#include "html_index.h"
 #include "html_other.h"
+#include "html_index.h"
+#include "html_dart.h"
 
 bool isIp(String str)
 {
@@ -46,7 +47,7 @@ void initServer()
     // index
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
     {
-        // if (captivePortal(request)) return;
+        if (captivePortal(request)) return;
         serveIndex(request);
     });
 
@@ -99,25 +100,52 @@ void initServer()
             const String name = request->getParam(i)->value().substring(index+1);
 
             dart.addPlayer(code, name);
-            p += request->getParam(i)->name();
-            p += ": ";
-            p += request->getParam(i)->value();
-            p += "\n";
         }
 
-        p += "\n" + dart.listPlayers();
+        dart.setStatus(dartGameStatus::created);
 
-        request->send(200, "text/plain", p);
+        AsyncWebServerResponse *response = request->beginResponse(302);
+        response->addHeader(F("Location"), F("/game"));
+        request->send(response);
     });
 
-    server.on("^dart\\/game\\/[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?$", HTTP_GET, [] (AsyncWebServerRequest *request)
+    // server.on("^dart\\/game\\/[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?$", HTTP_GET, [] (AsyncWebServerRequest *request)
+    // {
+    //     String sensorId = request->pathArg(0);
+    //     request->send(200, "text/plain", sensorId);
+    // });
+
+    server.on("/game", HTTP_GET, [] (AsyncWebServerRequest *request)
     {
-        String sensorId = request->pathArg(0);
-        request->send(200, "text/plain", sensorId);
+        AsyncWebServerResponse *response;
+        if(dart.getStatus() == dartGameStatus::created) {
+            dart.setStatus(dartGameStatus::started);
+        }
+
+        if(dart.getStatus() == dartGameStatus::started || dart.getStatus() == dartGameStatus::running) {
+            response = request->beginResponse_P(200, "text/html", HTML_dart, HTML_dart_L);
+            response->addHeader("Content-Encoding","gzip");
+        } else {
+            String status = "";
+            switch(dart.getStatus()) {
+                case dartGameStatus::unkown: status = "unkown"; break;
+                case dartGameStatus::created: status = "created"; break;
+                case dartGameStatus::started: status = "started"; break;
+                case dartGameStatus::running: status = "running"; break;
+                case dartGameStatus::done: status = "done"; break;
+                case dartGameStatus::aborted: status = "aborted"; break;
+                case dartGameStatus::error: status = "error"; break;
+            }
+            request->send(200, "text/plain", "Game is currently not available. Current game state: " + status);
+            return;
+        }
+
+        request->send(response);
     });
 
     server.onNotFound( [](AsyncWebServerRequest *request)
     {
+        // fix for CORS
         if (request->method() == HTTP_OPTIONS) {
             AsyncWebServerResponse *response = request->beginResponse(200);
             response->addHeader(F("Access-Control-Max-Age"), F("7200"));

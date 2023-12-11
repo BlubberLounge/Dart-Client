@@ -217,6 +217,7 @@ function writeChunks(srcDir, specs, resultFile)
 }
 
 writeHtmlGzipped("src/web/index.html", "src/html_index.h", 'index');
+writeHtmlGzipped("src/web/dart/dart.html", "src/html_dart.h", 'dart');
 
 writeChunks(
     "src/web",

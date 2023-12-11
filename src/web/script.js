@@ -43,17 +43,8 @@ d.addEventListener('DOMContentLoaded', function ()
             return;
         }
 
-        const nextPlayerNumber = playerCount + 1;
-        const newItem = d.createElement('li');
-        newItem.innerHTML = playerName;
-        const newHidden = d.createElement('input');
-        newHidden.type = 'hidden';
-        newHidden.id = 'p' + nextPlayerNumber;
-        newHidden.name = 'p' + nextPlayerNumber;
-        newHidden.value = playerCode + ':' + playerName;
-        newItem.appendChild(newHidden);
-
-        playerList.append(newItem);
+        if(!addPlayer(playerCode, playerName))
+            return;
 
         // clear inputs
         playerCode.value = null;
@@ -70,6 +61,38 @@ d.addEventListener('DOMContentLoaded', function ()
             btnAdd.click();
         });
     });
+
+    function addPlayer(code, name)
+    {
+        let newPlayer = {
+            code: code,
+            name: name
+        };
+
+        const playerList = d.getElementById('playerlist');
+        const playerCount = playerList.childElementCount;
+        for(const item of playerList.children)
+        {
+            console.log(newPlayer.code +' - '+ item.querySelector('input').value);
+            if((newPlayer.code+':'+newPlayer.name) == item.querySelector('input').value) {
+                displayError('Player is already in the list');
+                return false;
+            }
+        }
+
+        const nextPlayerNumber = playerCount + 1;
+        const newItem = d.createElement('li');
+        newItem.innerHTML = newPlayer.name;
+        const newHidden = d.createElement('input');
+        newHidden.type = 'hidden';
+        newHidden.id = 'p' + nextPlayerNumber;
+        newHidden.name = 'p' + nextPlayerNumber;
+        newHidden.value = newPlayer.code + ':' + newPlayer.name;
+        newItem.appendChild(newHidden);
+        playerList.append(newItem);
+
+        return true;
+    }
 
     function showPage(page)
     {

@@ -11,7 +11,6 @@ class player
     protected:
         String code;
         String name;
-        bool active = false;
 
     public:
         player();
@@ -19,11 +18,9 @@ class player
 
         String getCode();
         String getName();
-        bool isActive();
 
         void setCode(String code);
         void setName(String name);
-        void setActive(bool isActive);
 };
 
 #endif
