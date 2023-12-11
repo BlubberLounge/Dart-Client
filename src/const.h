@@ -3,7 +3,7 @@
 
 /*
  *
- * 
+ *
  */
 
 #include <LittleFS.h>
@@ -16,6 +16,9 @@
 #define DART_API_URL DART_HOST + "api/v1/"
 
 #define MDNS_NAME   "x"
+
+#define MAX_DARTPLAYER 4
+#define DARTPLAYER_CODE_SIZE 10
 
 
 #ifdef USE_OTA

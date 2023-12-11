@@ -17,3 +17,8 @@ body {
 .hidden {
     display: none;
 }
+
+.errorMsg {
+    color: rgb(212, 52, 52);
+    margin-top: .5rem;
+}

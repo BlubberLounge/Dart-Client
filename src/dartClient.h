@@ -32,8 +32,12 @@ GLOBAL_VAR WiFiClient client;
 GLOBAL_VAR DNSServer dnsServer;
 
 GLOBAL_VAR String escapedMac _INIT("x");
-GLOBAL_VAR char cmDNS[33] _INIT(MDNS_NAME); 
+GLOBAL_VAR char cmDNS[33] _INIT(MDNS_NAME);
 GLOBAL_VAR bool ap_active _INIT(false);
+
+#include "dartGame.h"
+
+GLOBAL_VAR dartGame dart;
 
 
 class dartClient
@@ -54,7 +58,7 @@ class dartClient
 
         void init();
         void loop();
-        
+
         void initConnection();
         void handleConnection();
         void handleWeb();

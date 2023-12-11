@@ -66,6 +66,11 @@ void initServer()
         request->send(200, "text/plain", (String)ESP.getFreeHeap());
     });
 
+    server.on("/isOnline", HTTP_GET, [](AsyncWebServerRequest *request)
+    {
+        request->send(200, "text/plain", (String)(WIFI_CONNECTED ? "true" : "false"));
+    });
+
     server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request)
     {
         if(!handleFileRead(request, "/favicon.ico")) request->send_P(200, "image/x-icon", favicon, 156);
@@ -87,13 +92,20 @@ void initServer()
 
     server.on("/create", HTTP_POST, [] (AsyncWebServerRequest *request)
     {
-        String p = "Parameters: ";
+        String p = "Parameters: \n";
         for(uint8_t i = 0; i < request->params(); i++) {
+            int index = request->getParam(i)->value().indexOf(":");
+            const String code = request->getParam(i)->value().substring(0, index); // index-1, to strip checksum
+            const String name = request->getParam(i)->value().substring(index+1);
+
+            dart.addPlayer(code, name);
             p += request->getParam(i)->name();
             p += ": ";
             p += request->getParam(i)->value();
-            p += " - ";
+            p += "\n";
         }
+
+        p += "\n" + dart.listPlayers();
 
         request->send(200, "text/plain", p);
     });

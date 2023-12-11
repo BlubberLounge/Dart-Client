@@ -3,10 +3,11 @@
 
 #include <Arduino.h>
 
+
 /*
  *
  *      Global functions
- * 
+ *
  */
 
 bool isIp(String str);

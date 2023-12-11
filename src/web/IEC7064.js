@@ -31,7 +31,6 @@ class IEC7064
     verify(input)
     {
         input = input.split('');
-        console.log(input.slice(0, -1));
         return input.slice(-1)[0] === this.checksum(input.slice(0, -1));
     }
 

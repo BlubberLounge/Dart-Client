@@ -1,9 +1,12 @@
-var d = document;
-var maxPlayer = 4;
+const d = document;
+const maxPlayer = 4;
 
 d.addEventListener('DOMContentLoaded', function ()
 {
     const _IEC7064 = new IEC7064();
+    fetch('/isOnline')
+        .then(response => console.log(response.text()))
+        .catch(err => console.error(err));
 
     // application container
     var app = d.getElementById('app');
@@ -16,23 +19,16 @@ d.addEventListener('DOMContentLoaded', function ()
         showPage(page_newGame);
     });
 
-    function showPage(page)
-    {
-        if(page === undefined)
-            return;
-
-        toggleClass(currentPage, 'hidden');
-        toggleClass(page, 'hidden');
-    }
-
     const btnAdd = d.getElementById('btn-addPlayer');
     btnAdd.addEventListener('click', e =>
     {
         e.preventDefault();
         const playerList = d.getElementById('playerlist');
         const playerCount = playerList.childElementCount;
-        if(playerCount >= maxPlayer)
+        if(playerCount >= maxPlayer) {
+            displayError('Max number of player reached');
             return;
+        }
 
         const playerCode = d.getElementById('newPlayerCode').value;
         const playerName = d.getElementById('newPlayerName').value;
@@ -41,8 +37,9 @@ d.addEventListener('DOMContentLoaded', function ()
 
 
         if(!_IEC7064.verify(playerCode)){
-            console.log('Code is not valid: '+ playerCode);
-            console.log(_IEC7064.checksum(playerCode));
+            displayError('Code is not valid');
+            // console.log('Code is not valid: '+ playerCode);
+            // console.log(_IEC7064.checksum(playerCode));
             return;
         }
 
@@ -61,6 +58,7 @@ d.addEventListener('DOMContentLoaded', function ()
         // clear inputs
         playerCode.value = null;
         playerName.value = null;
+        d.getElementById('errorMsg').innerHTML = null;
     });
 
     [d.getElementById('newPlayerCode'), d.getElementById('newPlayerName')].map(el => {
@@ -72,6 +70,20 @@ d.addEventListener('DOMContentLoaded', function ()
             btnAdd.click();
         });
     });
+
+    function showPage(page)
+    {
+        if(page === undefined)
+            return;
+
+        toggleClass(currentPage, 'hidden');
+        toggleClass(page, 'hidden');
+    }
+
+    function displayError(msg)
+    {
+        d.getElementById('errorMsg').innerHTML = msg;
+    }
 
 }, false);
 

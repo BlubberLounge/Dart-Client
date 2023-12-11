@@ -81,9 +81,9 @@ void dartClient::initConnection()
 
 void dartClient::handleConnection()
 {
-    static byte stacO = 0;
+    static uint8_t stacO = 0;
     if(ap_active) {
-        byte stac = 0;
+        uint8_t stac = 0;
         stac = wifi_softap_get_station_num();
         if (stac != stacO) {
             stacO = stac;
