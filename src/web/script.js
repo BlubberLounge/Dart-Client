@@ -4,9 +4,7 @@ const maxPlayer = 4;
 d.addEventListener('DOMContentLoaded', function ()
 {
     const _IEC7064 = new IEC7064();
-    fetch('/isOnline')
-        .then(response => console.log(response.text()))
-        .catch(err => console.error(err));
+    const req = new CRequest();
 
     // application container
     var app = d.getElementById('app');
@@ -64,6 +62,7 @@ d.addEventListener('DOMContentLoaded', function ()
 
     function addPlayer(code, name)
     {
+        let success = true;
         let newPlayer = {
             code: code,
             name: name
@@ -78,6 +77,18 @@ d.addEventListener('DOMContentLoaded', function ()
                 displayError('Player is already in the list');
                 return false;
             }
+        }
+
+        req.post('/addPlayer', newPlayer, function(e)
+        {
+            console.log(e);
+            if(e.message != "ok")
+                success = false;
+        });
+
+        if(!success) {
+            displayError('Server error');
+            return false;
         }
 
         const nextPlayerNumber = playerCount + 1;

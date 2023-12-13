@@ -29,12 +29,14 @@
 #define WIFI_CONNECTED (WiFi.status() == WL_CONNECTED)
 
 GLOBAL_VAR AsyncWebServer server _INIT_N(((80)));
+GLOBAL_VAR AsyncWebSocket ws _INIT_N((("/ws")));
 GLOBAL_VAR WiFiClient client;
 GLOBAL_VAR DNSServer dnsServer;
 
 GLOBAL_VAR String escapedMac _INIT("x");
 GLOBAL_VAR char cmDNS[33] _INIT(MDNS_NAME);
 GLOBAL_VAR bool ap_active _INIT(false);
+GLOBAL_VAR StaticJsonDocument<10240> doc;
 
 #include "dartGame.h"
 

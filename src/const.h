@@ -15,6 +15,7 @@
 #include <DNSServer.h>
 #include <SD.h>
 #include <SPI.h>
+#include <AsyncJson.h>
 #include <ArduinoJson.h>
 
 #define DART_HOST "http://192.168.178.100:81/"
