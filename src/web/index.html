@@ -2,11 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
     <title> Dart-Client </title>
     <link rel="shortcut icon" href="favicon.ico"/>
 
+    <meta name="description" content="A very cool little devices that is used for displaying and tracking a game of darts." />
+
     <!-- styles -->
-    <link rel="stylesheet" href="normalize.css">
+    <!-- <link rel="stylesheet" href="normalize.css"> -->
+    <link rel="stylesheet" href="milligram.min.css">
     <link rel="stylesheet" href="style.css">
 
     <!-- scripts -->
@@ -17,28 +22,42 @@
 
 </head>
 <body>
-    <h1 style="text-align:center;">
+    <h2 style="text-align:center;">
         Dart-Client
-    </h1>
+    </h2>
 
     <div id="app">
         <div id="page-index">
-            <div class="container center">
-                <button id="btn-newGame"> new game </button>
+            <div>
+                <button id="btn-newGame" class="button"> new game </button>
             </div>
         </div>
         <div id="page-createGame" class="hidden">
-            <form action="/create" method="POST" class="container center">
-                <ol id="playerlist">
+            <form action="/create" method="POST" class="container">
+                <div class="row">
+                    <ol id="playerlist">
 
-                </ol>
-                <div>
-                    <input type="text" id="newPlayerCode" placeholder="Enter player code" maxlength="10">
-                    <input type="text" id="newPlayerName" placeholder="Enter player name" maxlength="50">
-                    <button id="btn-addPlayer"> Add </button>
+                    </ol>
                 </div>
-                <div id="errorMsg" class="errorMsg"></div>
-                <button id="btn-startGame" style="margin-top: 1rem;"> Start game </button>
+                <div class="row">
+                    <div class="column">
+                        <input type="text" id="newPlayerCode" placeholder="Enter player code" maxlength="10">
+                    </div>
+                    <div class="column">
+                        <input type="text" id="newPlayerName" placeholder="Enter player name" maxlength="50">
+                    </div>
+                    <div class="column">
+                        <button id="btn-addPlayer" class="button"> Add </button>
+                    </div>
+                </div>
+                <div class="row" style="margin: 1rem 0;">
+                    <div id="errorMsg" class="errorMsg"></div>
+                </div>
+                <div class="row" style="margin-top: 2rem;">
+                    <div class="column">
+                        <button id="btn-startGame" class="button"> Start game </button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

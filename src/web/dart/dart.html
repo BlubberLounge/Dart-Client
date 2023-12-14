@@ -2,25 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title> Dart-Client Game </title>
-    <link rel="shortcut icon" href="favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <title> Game </title>
+    <link rel="shortcut icon" href="../favicon.ico"/>
+
+    <meta name="description" content="A very cool little devices that is used for displaying and tracking a game of darts." />
 
     <!-- styles -->
-    <link rel="stylesheet" href="normalize.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../milligram.min.css">
+    <link rel="stylesheet" href="../style.css">
 
     <!-- scripts -->
-    <script defer src="consoleText.js"></script>
-    <script defer src="dart.js"></script>
+    <script defer src="../consoleText.js"></script>
+    <script defer src="../dart.js"></script>
 
 </head>
 <body>
-    <h1 style="text-align:center;">
+    <h2 style="text-align:center;">
         Game
-    </h1>
+    </h2>
 
     <div id="app">
-        <h2> Add Game here </h2>
+        <div class="numpad">
+            <div class="numpad_row">
+                <button>1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>4</button>
+                <button>5</button>
+            </div>
+
+            <div class="numpad_row">
+                <button>6</button>
+                <button>7</button>
+                <button>8</button>
+                <button>9</button>
+                <button>10</button>
+            </div>
+            <div class="numpad_row">
+                <button>11</button>
+                <button>12</button>
+                <button>13</button>
+                <button>14</button>
+                <button>15</button>
+            </div>
+            <div class="numpad_row">
+                <button>16</button>
+                <button>17</button>
+                <button>18</button>
+                <button>19</button>
+                <button>20</button>
+            </div>
+            <div class="numpad_row">
+                <button class="space">0</button>
+                <button>Bull</button>
+                <button>D</button>
+                <button>B</button>
+            </div>
+        </div>
     </div>
 </body>
 </html>

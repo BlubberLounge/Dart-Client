@@ -1,17 +1,32 @@
 body {
-    color: #fff;
+    color: #d1d1d1;
     background-color: #1E1E1E;
     font-family: Verdana, sans-serif;
 }
 
-.container {
-    display: flex;
+body::after {
+    content: "";
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 90vw;
+    height: 50vh;
+    background-image: url(blubber.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.03;
+    z-index: -1;
 }
 
-.container.center {
-    flex-direction: column;
+input {
+    color: #d1d1d1;
+}
+
+#app {
+    max-width: 800px;
+    display: flex;
     justify-content: center;
-    align-items: center;
+    margin: 0 auto;
 }
 
 .hidden {
@@ -21,4 +36,21 @@ body {
 .errorMsg {
     color: rgb(212, 52, 52);
     margin-top: .5rem;
+}
+
+.numpad_row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.numpad button {
+    width: 6rem;
+    height: 3rem;
+    margin: .25rem .25rem;
+    padding: 0;
+    line-height: normal;
+}
+
+button.space {
+    margin-right: 6.75rem;
 }
