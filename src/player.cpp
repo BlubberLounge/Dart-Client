@@ -1,36 +1,41 @@
 
-#include "player.h"
+#include "Player.h"
 
 /**
  *  Constructor
  */
-player::player()
+Player::Player()
 {
     //
 }
 
-player::player(String code, String name)
+Player::Player(String code, String name)
 {
     this->code = code;
     this->name = name;
 }
 
-String player:: getCode()
+void Player::addThrow(DartThrow t)
+{
+    this->dartThrows.push_back(t);
+}
+
+String Player:: getCode()
 {
     return this->code;
 }
 
-String player::getName()
+String Player::getName()
 {
     return this->name;
 }
 
-void player::setCode(String code)
+void Player::setCode(String code)
 {
     this->code = code;
 }
 
-void player::setName(String name)
+void Player::setName(String name)
 {
     this->name = name;
 }

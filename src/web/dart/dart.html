@@ -10,55 +10,81 @@
     <meta name="description" content="A very cool little devices that is used for displaying and tracking a game of darts." />
 
     <!-- styles -->
-    <link rel="stylesheet" href="../milligram.min.css">
+    <link rel="stylesheet" href="../normalize.css">
     <link rel="stylesheet" href="../style.css">
 
     <!-- scripts -->
-    <script defer src="../consoleText.js"></script>
-    <script defer src="../dart.js"></script>
+    <script src="../request.js"></script>
+    <script src="../consoleText.js"></script>
+    <script src="dart.js"></script>
 
 </head>
 <body>
-    <h2 style="text-align:center;">
+    <h1 style="text-align:center;">
         Game
-    </h2>
+    </h1>
 
-    <div id="app">
-        <div class="numpad">
-            <div class="numpad_row">
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>4</button>
-                <button>5</button>
+    <div id="app" style="flex-direction: column;">
+        <div class="container">
+            <div id="p12" class="row">
+                <div id="p1" class="col">
+                    <div class="playercard-skeleton skeleton"></div>
+                </div>
+                <div id="p2" class="col">
+                    <div class="playercard-skeleton skeleton"></div>
+                </div>
             </div>
-
-            <div class="numpad_row">
-                <button>6</button>
-                <button>7</button>
-                <button>8</button>
-                <button>9</button>
-                <button>10</button>
+            <div id="p34" class="row" style="margin-top: 1.5rem;">
+                <div id="p3" class="col">
+                    <div class="playercard-skeleton skeleton"></div>
+                </div>
+                <div id="p4" class="col">
+                    <div class="playercard-skeleton skeleton"></div>
+                </div>
             </div>
-            <div class="numpad_row">
-                <button>11</button>
-                <button>12</button>
-                <button>13</button>
-                <button>14</button>
-                <button>15</button>
+            <div class="row" style="margin-top: 2rem; justify-content: center;">
+                <input type="text" name="" id="" style="font-size: 1.75rem;padding:1rem;width:8rem;" maxlength="4" pattern="[0-9BDT]{4}" title="Dart symbols only" readonly>
             </div>
-            <div class="numpad_row">
-                <button>16</button>
-                <button>17</button>
-                <button>18</button>
-                <button>19</button>
-                <button>20</button>
-            </div>
-            <div class="numpad_row">
-                <button class="space">0</button>
-                <button>Bull</button>
-                <button>D</button>
-                <button>B</button>
+            <div class="row" style="margin-top: 2rem; justify-content: center;">
+                <div class="numpad">
+                    <div class="numpad_row">
+                        <button>1</button>
+                        <button>2</button>
+                        <button>3</button>
+                        <button>4</button>
+                        <button>5</button>
+                    </div>
+                    <div class="numpad_row">
+                        <button>6</button>
+                        <button>7</button>
+                        <button>8</button>
+                        <button>9</button>
+                        <button>10</button>
+                    </div>
+                    <div class="numpad_row">
+                        <button>11</button>
+                        <button>12</button>
+                        <button>13</button>
+                        <button>14</button>
+                        <button>15</button>
+                    </div>
+                    <div class="numpad_row">
+                        <button>16</button>
+                        <button>17</button>
+                        <button>18</button>
+                        <button>19</button>
+                        <button>20</button>
+                    </div>
+                    <div class="numpad_row">
+                        <button class="space">0</button>
+                        <button>Bull</button>
+                        <button>D</button>
+                        <button>T</button>
+                    </div>
+                    <div class="numpad_row">
+                        <button style="width: 100%;background-color: #34a51e;"> Enter </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -1,20 +1,26 @@
-#ifndef player_h
-#define player_h
+#ifndef Player_h
+#define Player_h
 
 #include <Arduino.h>
+#include "DartThrow.h"
 
 
-class player
+class Player
 {
     private:
 
     protected:
         String code;
         String name;
+        uint16_t points;
 
     public:
-        player();
-        player(String code, String name);
+        Player();
+        Player(String code, String name);
+
+        std::vector<DartThrow> dartThrows;
+
+        void addThrow(DartThrow t);
 
         String getCode();
         String getName();

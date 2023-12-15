@@ -119,10 +119,38 @@ void initServer()
 
     server.on("/create", HTTP_POST, [] (AsyncWebServerRequest *request)
     {
-        dart.setStatus(dartGameStatus::created);
+        dart.setStatus(DartGameStatus::created);
 
         request->redirect("/game");
     });
+
+    server.on("/state", HTTP_GET, [] (AsyncWebServerRequest *request)
+    {
+        AsyncJsonResponse *response = new AsyncJsonResponse();
+        JsonVariant json = response->getRoot();
+        JsonObject state = json.createNestedObject("state");
+        state[F("isOnline")] = WIFI_CONNECTED;
+
+        JsonObject game = json.createNestedObject("game");
+        dart.serialize(game);
+
+        response->setLength();
+        request->send(response);
+    });
+
+    AsyncCallbackJsonWebHandler* handler = new AsyncCallbackJsonWebHandler("/addThrow", [](AsyncWebServerRequest *request, JsonVariant &json)
+    {
+        const JsonObject &obj = json.as<JsonObject>();
+        uint8_t value = obj["value"];
+
+        DartThrow t;
+        t.setValue(value);
+        dart.addThrow(t);
+
+        request->send(200, "application/json", "{\"message\": \""+ (String)value +"\"}");
+
+    }, 10240);
+    server.addHandler(handler);
 
     // server.on("^dart\\/game\\/[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?$", HTTP_GET, [] (AsyncWebServerRequest *request)
     // {
@@ -133,34 +161,25 @@ void initServer()
     server.on("/game", HTTP_GET, [] (AsyncWebServerRequest *request)
     {
         AsyncWebServerResponse *response;
-        if(dart.getStatus() == dartGameStatus::created) {
-            dart.setStatus(dartGameStatus::started);
+        if(dart.getStatus() == DartGameStatus::created) {
+            dart.setStatus(DartGameStatus::started);
         }
 
-        if(dart.getStatus() == dartGameStatus::started || dart.getStatus() == dartGameStatus::running) {
+        if(dart.getStatus() == DartGameStatus::started || dart.getStatus() == DartGameStatus::running) {
             response = request->beginResponse_P(200, "text/html", HTML_dart, HTML_dart_L);
             response->addHeader("Content-Encoding","gzip");
         } else {
-            String status = "";
-            switch(dart.getStatus()) {
-                case dartGameStatus::unkown: status = "unkown"; break;
-                case dartGameStatus::created: status = "created"; break;
-                case dartGameStatus::started: status = "started"; break;
-                case dartGameStatus::running: status = "running"; break;
-                case dartGameStatus::done: status = "done"; break;
-                case dartGameStatus::aborted: status = "aborted"; break;
-                case dartGameStatus::error: status = "error"; break;
-            }
-            request->send(200, "text/plain", "Game is currently not available. Current game state: " + status);
+            request->send(200, "text/plain", "Game is currently not available. Current game state: " + dart.getStatusString());
             return;
         }
 
         request->send(response);
     });
 
+    ws.onEvent(onEvent);
     server.addHandler(&ws);
 
-    server.onNotFound( [](AsyncWebServerRequest *request)
+    server.onNotFound([](AsyncWebServerRequest *request)
     {
         // fix for CORS
         if (request->method() == HTTP_OPTIONS) {

@@ -28,8 +28,8 @@ d.addEventListener('DOMContentLoaded', function ()
             return;
         }
 
-        const playerCode = d.getElementById('newPlayerCode').value;
-        const playerName = d.getElementById('newPlayerName').value;
+        var playerCode = d.getElementById('newPlayerCode').value;
+        var playerName = d.getElementById('newPlayerName').value;
         if(playerCode === "" || playerCode === null || playerName === "" || playerName === null)
             return;
 
@@ -44,10 +44,6 @@ d.addEventListener('DOMContentLoaded', function ()
         if(!addPlayer(playerCode, playerName))
             return;
 
-        // clear inputs
-        playerCode.value = null;
-        playerName.value = null;
-        d.getElementById('errorMsg').innerHTML = null;
     });
 
     [d.getElementById('newPlayerCode'), d.getElementById('newPlayerName')].map(el => {
@@ -101,6 +97,11 @@ d.addEventListener('DOMContentLoaded', function ()
         newHidden.value = newPlayer.code + ':' + newPlayer.name;
         newItem.appendChild(newHidden);
         playerList.append(newItem);
+
+        // clear inputs
+        d.getElementById('newPlayerCode').value = null;
+        d.getElementById('newPlayerName').value = null;
+        d.getElementById('errorMsg').innerHTML = null;
 
         return true;
     }

@@ -10,8 +10,7 @@
     <meta name="description" content="A very cool little devices that is used for displaying and tracking a game of darts." />
 
     <!-- styles -->
-    <!-- <link rel="stylesheet" href="normalize.css"> -->
-    <link rel="stylesheet" href="milligram.min.css">
+    <link rel="stylesheet" href="normalize.css">
     <link rel="stylesheet" href="style.css">
 
     <!-- scripts -->
@@ -22,14 +21,16 @@
 
 </head>
 <body>
-    <h2 style="text-align:center;">
+    <h1 style="text-align:center;">
         Dart-Client
-    </h2>
+    </h1>
 
     <div id="app">
         <div id="page-index">
-            <div>
-                <button id="btn-newGame" class="button"> new game </button>
+            <div class="row">
+                <div class="col">
+                    <button id="btn-newGame"> new game </button>
+                </div>
             </div>
         </div>
         <div id="page-createGame" class="hidden">
@@ -40,21 +41,23 @@
                     </ol>
                 </div>
                 <div class="row">
-                    <div class="column">
+                    <div class="col">
                         <input type="text" id="newPlayerCode" placeholder="Enter player code" maxlength="10">
                     </div>
-                    <div class="column">
+                    <div class="col">
                         <input type="text" id="newPlayerName" placeholder="Enter player name" maxlength="50">
                     </div>
-                    <div class="column">
-                        <button id="btn-addPlayer" class="button"> Add </button>
+                </div>
+                <div class="row" style="margin: 1rem 0;">
+                    <div class="col">
+                        <button id="btn-addPlayer"> Add </button>
                     </div>
                 </div>
                 <div class="row" style="margin: 1rem 0;">
                     <div id="errorMsg" class="errorMsg"></div>
                 </div>
                 <div class="row" style="margin-top: 2rem;">
-                    <div class="column">
+                    <div class="col">
                         <button id="btn-startGame" class="button"> Start game </button>
                     </div>
                 </div>

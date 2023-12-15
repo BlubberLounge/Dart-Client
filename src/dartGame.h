@@ -1,9 +1,11 @@
 #ifndef dartGame_h
 #define dartGame_h
 
-#include "player.h"
+#include <ArduinoJson.h>
+#include "DartThrow.h"
+#include "Player.h"
 
-enum class dartGameStatus
+enum class DartGameStatus
 {
     unkown,
     created,
@@ -14,17 +16,28 @@ enum class dartGameStatus
     error
 };
 
-class dartGame
+class DartGame
 {
     private:
+        void nextPlayer();
 
     protected:
-        std::vector<player> players;
-        dartGameStatus status = dartGameStatus::unkown;
+        std::vector<Player> players;
+        DartGameStatus status = DartGameStatus::unkown;
+
+        Player &currentPlayer = this->players.front();
+        uint8_t currentPlayerIndex = 0;
+        uint8_t throwCounter = 0;
+        const uint16_t points = 301;
+        uint8_t turn = 0;   // current turn
 
     public:
-        dartGame();
+        DartGame();
 
+        bool addThrow(DartThrow t);
+
+        void serialize(JsonObject j);
+        void deserialize(JsonObject j);
         void loadFromFile(String path);
         void saveToFile(String path);
 
@@ -32,9 +45,12 @@ class dartGame
         void addPlayer(String code, String name);
         void removePlayer(String code);
         void resetPlayer();
+        void setCurrentPlayer(Player &player);
+        Player getCurrentPlayer();
 
-        dartGameStatus getStatus();
-        void setStatus(dartGameStatus status);
+        DartGameStatus getStatus();
+        void setStatus(DartGameStatus status);
+        String getStatusString();
 };
 
 #endif

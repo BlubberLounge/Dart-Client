@@ -81,8 +81,6 @@ void dartClient::initStorage()
 
 void dartClient::initConnection()
 {
-    ws.onEvent(onEvent);
-
     // WiFi.config(IPAddress((uint32_t)0), IPAddress((uint32_t)0), IPAddress((uint32_t)0));
     WiFi.hostname(WIFI_HOSTNAME);
     WiFi.softAPdisconnect(true);

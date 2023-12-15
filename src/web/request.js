@@ -1,28 +1,32 @@
 
 class CRequest
 {
-    async get(url, data, cb = null)
+    async get(url, cb = null)
     {
-        await this.send(url, 'GET', data, cb);
+        try {
+            const response =  await fetch(url, {
+                method: "GET",
+            });
+
+            const result = await response.json(); // response.text()
+            cb(result);
+        } catch (err) {
+            this.handleError(err);
+        }
     }
 
     async post(url, data, cb = null)
     {
-        await this.send(url, 'POST', data, cb);
-    }
-
-    async send(url, method, data, cb = null)
-    {
         try {
             const response =  await fetch(url, {
-                method: method,
+                method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
                 body: new URLSearchParams(data),
             });
 
-            const result = await response.json(); // response.test()
+            const result = await response.json(); // response.text()
             cb(result);
         } catch (err) {
             this.handleError(err);

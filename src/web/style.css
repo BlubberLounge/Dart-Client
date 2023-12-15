@@ -1,7 +1,11 @@
+* {
+    --clr-main: #3479c3;
+}
+
 body {
     color: #d1d1d1;
     background-color: #1E1E1E;
-    font-family: Verdana, sans-serif;
+    font-family: Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif;
 }
 
 body::after {
@@ -18,8 +22,46 @@ body::after {
     z-index: -1;
 }
 
-input {
-    color: #d1d1d1;
+button {
+    color: #fff;
+    background-color: var(--clr-main);
+    text-transform: uppercase;
+    border-radius: .325rem;
+    border: 0;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #275d97;
+}
+
+.row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-.5 * var(--bs-gutter-x));
+    margin-left: calc(-.5 * var(--bs-gutter-x));
+}
+
+.row > * {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    margin-top: var(--bs-gutter-y);
+}
+
+.col {
+    flex: 1 0 0%;
+}
+
+.col-a {
+    flex: 0 0 auto;
+    width: auto;
 }
 
 #app {
@@ -27,6 +69,7 @@ input {
     display: flex;
     justify-content: center;
     margin: 0 auto;
+    padding: 0 1rem .5rem 1rem;
 }
 
 .hidden {
@@ -38,13 +81,17 @@ input {
     margin-top: .5rem;
 }
 
+.numpad {
+    width: auto;
+}
+
 .numpad_row {
     display: flex;
     flex-wrap: wrap;
 }
 
-.numpad button {
-    width: 6rem;
+.numpad_row button {
+    width: 4rem;
     height: 3rem;
     margin: .25rem .25rem;
     padding: 0;
@@ -52,5 +99,68 @@ input {
 }
 
 button.space {
-    margin-right: 6.75rem;
+    margin-right: 4.75rem;
+}
+
+.skeleton {
+    display: inline-block;
+    min-height: 1em;
+    vertical-align: middle;
+    background-color: currentcolor;
+    opacity: .5;
+    -webkit-mask-image: linear-gradient(130deg,#000 55%,rgba(0,0,0,0.8) 75%,#000 95%);
+    mask-image: linear-gradient(130deg,#000 55%,rgba(0,0,0,0.8) 75%,#000 95%);
+    -webkit-mask-size: 200% 100%;
+    mask-size: 200% 100%;
+    animation: wave 2s linear infinite;
+}
+
+@keyframes wave {
+    100% {
+        -webkit-mask-position: -200% 0%;
+        mask-position: -200% 0%;
+    }
+}
+
+.playercard-skeleton {
+    width: 100%;
+    height: 6rem;
+    border-radius: .425rem;
+}
+
+.playercard {
+    position: relative;
+    word-wrap: break-word;
+    background-clip: border-box;
+    border: 2px solid rgba(255, 255, 255, .1);
+    border-radius: .375rem;
+    background-color: #2b2b2b;
+}
+
+.playercard-total-points {
+    font-size: 1.75rem;
+    border-right: 1px solid rgba(255, 255, 255, .15);
+    padding: .5rem .75rem;
+}
+
+.playercard-throw-count {
+    border-top: 1px solid rgba(255, 255, 255, .15);
+    border-right: 1px solid rgba(255, 255, 255, .15);
+    padding: .275rem 0;
+}
+
+.playercard-throw-points {
+    border-right: 1px solid rgba(255, 255, 255, .15);
+}
+
+.g-1, .gx-1 {
+    --bs-gutter-x: 0.25rem;
+}
+.g-1, .gy-1 {
+    --bs-gutter-y: 0.25rem;
+}
+
+.x {
+    color: #a32828;
+    font-weight: 900;
 }

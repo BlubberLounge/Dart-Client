@@ -38,10 +38,9 @@ GLOBAL_VAR char cmDNS[33] _INIT(MDNS_NAME);
 GLOBAL_VAR bool ap_active _INIT(false);
 GLOBAL_VAR StaticJsonDocument<10240> doc;
 
-#include "dartGame.h"
+#include "DartGame.h"
 
-GLOBAL_VAR dartGame dart;
-
+GLOBAL_VAR DartGame dart;
 
 class dartClient
 {
