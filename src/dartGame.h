@@ -25,8 +25,8 @@ class DartGame
         std::vector<Player> players;
         DartGameStatus status = DartGameStatus::unkown;
 
-        Player &currentPlayer = this->players.front();
-        uint8_t currentPlayerIndex = 0;
+        Player *currentPlayer = nullptr;
+        uint8_t currentPlayerIndex = 0; //use a pointer at a later point
         uint8_t throwCounter = 0;
         const uint16_t points = 301;
         uint8_t turn = 0;   // current turn
@@ -45,8 +45,8 @@ class DartGame
         void addPlayer(String code, String name);
         void removePlayer(String code);
         void resetPlayer();
-        void setCurrentPlayer(Player &player);
-        Player getCurrentPlayer();
+        // void setCurrentPlayer(Player &player);
+        // Player getCurrentPlayer();
 
         DartGameStatus getStatus();
         void setStatus(DartGameStatus status);

@@ -13,12 +13,14 @@ DartGame::DartGame()
 
 void DartGame::nextPlayer()
 {
-    this->currentPlayer = this->players.at(this->currentPlayerIndex + 1);
+    this->currentPlayerIndex++;
+    this->currentPlayerIndex = this->currentPlayerIndex % this->players.size();
+    this->currentPlayer = &this->players.at(this->currentPlayerIndex);
 }
 
 bool DartGame::addThrow(DartThrow t)
 {
-    this->currentPlayer.addThrow(t);
+    this->currentPlayer->addThrow(t);
     this->throwCounter++;
 
     if(this->throwCounter >= 3) {
@@ -33,13 +35,14 @@ void DartGame::serialize(JsonObject j)
 {
     j[F("points")] = this->points;
     j[F("state")] = this->getStatusString();
-    j[F("currentPlayer")] = this->currentPlayer.getCode();
+    j[F("currentPlayer")] = this->currentPlayer->getCode();
 
     JsonArray players = j.createNestedArray(F("players"));
     for(Player p : this->players) {
         JsonObject player = players.createNestedObject();
         player[F("code")] = p.getCode();
         player[F("name")] = p.getName();
+        player[F("points")] = this->points - p.getPoints();
 
         JsonArray dartThrows = player.createNestedArray(F("throws"));
         for(DartThrow dt : p.dartThrows) {
@@ -104,7 +107,7 @@ DartGameStatus DartGame::getStatus()
 void DartGame::setStatus(DartGameStatus status)
 {
     if(status == DartGameStatus::created)
-        this->currentPlayer = this->players.front();
+        this->currentPlayer = &this->players.front();
 
     this->status = status;
 }
@@ -122,14 +125,4 @@ String DartGame::getStatusString()
         case DartGameStatus::error: return "error"; break;
         default: return "unkown"; break;
     }
-}
-
-void DartGame::setCurrentPlayer(Player &player)
-{
-    this->currentPlayer = player;
-}
-
-Player DartGame::getCurrentPlayer()
-{
-    return this->currentPlayer;
 }

@@ -138,20 +138,6 @@ void initServer()
         request->send(response);
     });
 
-    AsyncCallbackJsonWebHandler* handler = new AsyncCallbackJsonWebHandler("/addThrow", [](AsyncWebServerRequest *request, JsonVariant &json)
-    {
-        const JsonObject &obj = json.as<JsonObject>();
-        uint8_t value = obj["value"];
-
-        DartThrow t;
-        t.setValue(value);
-        dart.addThrow(t);
-
-        request->send(200, "application/json", "{\"message\": \""+ (String)value +"\"}");
-
-    }, 10240);
-    server.addHandler(handler);
-
     // server.on("^dart\\/game\\/[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?$", HTTP_GET, [] (AsyncWebServerRequest *request)
     // {
     //     String sensorId = request->pathArg(0);
@@ -161,9 +147,8 @@ void initServer()
     server.on("/game", HTTP_GET, [] (AsyncWebServerRequest *request)
     {
         AsyncWebServerResponse *response;
-        if(dart.getStatus() == DartGameStatus::created) {
+        if(dart.getStatus() == DartGameStatus::created)
             dart.setStatus(DartGameStatus::started);
-        }
 
         if(dart.getStatus() == DartGameStatus::started || dart.getStatus() == DartGameStatus::running) {
             response = request->beginResponse_P(200, "text/html", HTML_dart, HTML_dart_L);
@@ -175,6 +160,23 @@ void initServer()
 
         request->send(response);
     });
+
+    AsyncCallbackJsonWebHandler* handler = new AsyncCallbackJsonWebHandler("/addThrow", [](AsyncWebServerRequest *request, JsonVariant &json)
+    {
+        if(dart.getStatus() == DartGameStatus::started)
+            dart.setStatus(DartGameStatus::running);
+
+        const JsonObject &obj = json.as<JsonObject>();
+        uint8_t value = obj["value"];
+
+        DartThrow t;
+        t.setValue(value);
+        dart.addThrow(t);
+
+        request->send(200, "application/json", "{\"message\": \""+ (String)value +"\"}");
+
+    }, 10240);
+    server.addHandler(handler);
 
     ws.onEvent(onEvent);
     server.addHandler(&ws);

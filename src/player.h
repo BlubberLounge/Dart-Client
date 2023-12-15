@@ -12,7 +12,6 @@ class Player
     protected:
         String code;
         String name;
-        uint16_t points;
 
     public:
         Player();
@@ -24,6 +23,7 @@ class Player
 
         String getCode();
         String getName();
+        uint16_t getPoints();
 
         void setCode(String code);
         void setName(String name);

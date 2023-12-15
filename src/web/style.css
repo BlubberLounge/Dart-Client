@@ -81,7 +81,7 @@ button:hover {
     margin-top: .5rem;
 }
 
-.numpad {
+#numpad {
     width: auto;
 }
 
@@ -100,6 +100,16 @@ button:hover {
 
 button.space {
     margin-right: 4.75rem;
+}
+
+.btn-remove {
+    width: 50%;
+    background-color: #a51e1e;
+}
+
+.btn-enter {
+    width: 50%;
+    background-color: #34a51e;
 }
 
 .skeleton {

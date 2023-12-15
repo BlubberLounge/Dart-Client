@@ -30,6 +30,15 @@ String Player::getName()
     return this->name;
 }
 
+uint16_t Player::getPoints()
+{
+    uint16_t sum = 0;
+    for(DartThrow t : this->dartThrows)
+        sum += t.getValue();
+
+    return sum;
+}
+
 void Player::setCode(String code)
 {
     this->code = code;

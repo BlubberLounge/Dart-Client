@@ -1,11 +1,12 @@
 const d = document;
 var initialized = false;
+const req = new CRequest();
+var display = [];
 
 /*  */
 
 d.addEventListener('DOMContentLoaded', function ()
 {
-    const req = new CRequest();
 
     let gameSettings = {
         points: 301
@@ -16,13 +17,57 @@ d.addEventListener('DOMContentLoaded', function ()
         name
     };
 
+    const btnList = d.querySelectorAll('#numpad button');
+    [...btnList].map(e => {
+        e.addEventListener('click', ev => {
+            addToDisplay(e.getAttribute('data-bl-value'));
+            updateDisplay();
+        });
+    });
+
     req.get('/state', function(e)
     {
-        console.log(e);
         initGame(e.game);
         initialized = true;
     });
+
+    setInterval(update, 5000);
+
 });
+
+function updateDisplay()
+{
+    console.log(display);
+    d.getElementById('display').value = display.join("");
+}
+
+function addToDisplay(data)
+{
+    if(display.length >= 4)
+        return;
+
+    display.push(data);
+}
+
+function update()
+{
+    req.get('/state', function(e)
+    {
+        console.log("update");
+
+        let game = e.game;
+        let players = game.players;
+
+        for(const [i, player] of players.entries())
+        {
+            let html = d.querySelector(`[data-user-id="${player.code}"]`);
+            if(player.throws.length > 0) {
+                console.log(player.throws.reduce((a, b) => a + parseInt(b.value), 0));
+                html.querySelector(`.playercard-total-points`).innerHTML = game.points - player.throws.reduce((s, i) => s + parseInt(i.value), 0);
+            }
+        }
+    });
+}
 
 function initGame(data)
 {
@@ -33,7 +78,8 @@ function initGame(data)
     for(const [i, player] of data.players.entries()) {
         const p = {
             id: player.code,
-            name: player.name
+            name: player.name,
+            points: player.points
         }
         let pc = generatePlayercard(p, settings);
         d.getElementById(`p${i+1}`).innerHTML = pc;
@@ -62,7 +108,7 @@ function generatePlayercard(player, gameSettings)
         <div class="playercard-body">
             <div class="row" style="margin: 0;align-items: center;">
                 <div class="col-a playercard-total-points total">
-                    ${gameSettings.points}
+                    ${player.points}
                 </div>
                 <div class="col" style="font-size: .85em;padding-right:0;">
                     <div class="row" style="margin: 0;">
