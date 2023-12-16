@@ -12,6 +12,7 @@ class Player
     protected:
         String code;
         String name;
+        uint8_t winPos = 0;
 
     public:
         Player();
@@ -20,6 +21,8 @@ class Player
         std::vector<DartThrow> dartThrows;
 
         void addThrow(DartThrow t);
+
+        bool hasWon();
 
         String getCode();
         String getName();

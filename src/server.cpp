@@ -172,8 +172,11 @@ void initServer()
         DartThrow t;
         t.setValue(value);
         dart.addThrow(t);
-
-        request->send(200, "application/json", "{\"message\": \""+ (String)value +"\"}");
+        if(dart.isDone()) {
+            request->redirect("/stats");
+        } else {
+            request->send(200, "application/json", "{\"message\": \"ok\"}");
+        }
 
     }, 10240);
     server.addHandler(handler);
@@ -225,89 +228,120 @@ void serveIndex(AsyncWebServerRequest *request)
 
 void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len)
 {
-  if(type == WS_EVT_CONNECT){
-    //client connected
-    os_printf("ws[%s][%u] connect\n", server->url(), client->id());
-    client->printf("Hello Client %u :)", client->id());
-    client->ping();
-  } else if(type == WS_EVT_DISCONNECT){
-    //client disconnected
-    os_printf("ws[%s][%u] disconnect: %u\n", server->url(), client->id());
-  } else if(type == WS_EVT_ERROR){
-    //error was received from the other end
-    os_printf("ws[%s][%u] error(%u): %s\n", server->url(), client->id(), *((uint16_t*)arg), (char*)data);
-  } else if(type == WS_EVT_PONG){
-    //pong message was received (in response to a ping request maybe)
-    os_printf("ws[%s][%u] pong[%u]: %s\n", server->url(), client->id(), len, (len)?(char*)data:"");
-  } else if(type == WS_EVT_DATA){
-    //data packet
-    AwsFrameInfo * info = (AwsFrameInfo*)arg;
-    if(info->final && info->index == 0 && info->len == len){
-      //the whole message is in a single frame and we got all of it's data
-      os_printf("ws[%s][%u] %s-message[%llu]: ", server->url(), client->id(), (info->opcode == WS_TEXT)?"text":"binary", info->len);
-      if(info->opcode == WS_TEXT){
-        data[len] = 0;
-        os_printf("%s\n", (char*)data);
-      } else {
-        for(size_t i=0; i < info->len; i++){
-          os_printf("%02x ", data[i]);
-        }
-        os_printf("\n");
-      }
-      if(info->opcode == WS_TEXT)
-        client->text("I got your text message");
-      else
-        client->binary("I got your binary message");
-    } else {
-      //message is comprised of multiple frames or the frame is split into multiple packets
-      if(info->index == 0){
-        if(info->num == 0)
-          os_printf("ws[%s][%u] %s-message start\n", server->url(), client->id(), (info->message_opcode == WS_TEXT)?"text":"binary");
-        os_printf("ws[%s][%u] frame[%u] start[%llu]\n", server->url(), client->id(), info->num, info->len);
-      }
+    if(type == WS_EVT_CONNECT) {
+        //client connected
+        os_printf("ws[%s][%u] connect\n", server->url(), client->id());
+        client->ping();
+        sendDataWs(client);
 
-      os_printf("ws[%s][%u] frame[%u] %s[%llu - %llu]: ", server->url(), client->id(), info->num, (info->message_opcode == WS_TEXT)?"text":"binary", info->index, info->index + len);
-      if(info->message_opcode == WS_TEXT){
-        data[len] = 0;
-        os_printf("%s\n", (char*)data);
-      } else {
-        for(size_t i=0; i < len; i++){
-          os_printf("%02x ", data[i]);
-        }
-        os_printf("\n");
-      }
+    } else if(type == WS_EVT_DISCONNECT) {
+        //client disconnected
+        os_printf("ws[%s][%u] disconnect: %u\n", server->url(), client->id());
 
-      if((info->index + len) == info->len){
-        os_printf("ws[%s][%u] frame[%u] end[%llu]\n", server->url(), client->id(), info->num, info->len);
-        if(info->final){
-          os_printf("ws[%s][%u] %s-message end\n", server->url(), client->id(), (info->message_opcode == WS_TEXT)?"text":"binary");
-          if(info->message_opcode == WS_TEXT)
-            client->text("I got your text message");
-          else
-            client->binary("I got your binary message");
+    } else if(type == WS_EVT_ERROR) {
+        //error was received from the other end
+        os_printf("ws[%s][%u] error(%u): %s\n", server->url(), client->id(), *((uint16_t*)arg), (char*)data);
+
+    } else if(type == WS_EVT_PONG) {
+        //pong message was received (in response to a ping request maybe)
+        os_printf("ws[%s][%u] pong[%u]: %s\n", server->url(), client->id(), len, (len)?(char*)data:"");
+
+    } else if(type == WS_EVT_DATA) {
+        //data packet
+        AwsFrameInfo * info = (AwsFrameInfo*)arg;
+        if(info->final && info->index == 0 && info->len == len){
+            //the whole message is in a single frame and we got all of it's data
+            os_printf("ws[%s][%u] %s-message[%llu]: ", server->url(), client->id(), (info->opcode == WS_TEXT)?"text":"binary", info->len);
+
+            if(info->opcode == WS_TEXT){
+                if (len > 0 && len < 10 && data[0] == 'p') {
+                    // application layer heartbeat.
+                    client->text(F("{\"pong\":true}"));
+                    return;
+                }
+
+                bool respond = false;
+                DeserializationError error = deserializeJson(doc, data, len);
+                JsonObject root = doc.as<JsonObject>();
+
+                if (error || root.isNull())
+                    return;
+
+                if (root["d"] && root.size() == 1) {
+                    respond = true;
+                } else {
+                    respond = dart.deserialize(root);
+                }
+
+                if(respond) {
+                    sendDataWs(client);
+                } else {
+                    client->text(F("{\"success\":true}"));
+                }
+            } else {
+                // for(size_t i=0; i < info->len; i++){
+                //     os_printf("%02x ", data[i]);
+                // }
+                // os_printf("\n");
+            }
+        } else {
+            //message is comprised of multiple frames or the frame is split into multiple packets
+            // no need for handling split packets right now
+            if((info->index + len) == info->len){
+                if(info->final){
+                    if(info->message_opcode == WS_TEXT) {
+                        client->text(F("{\"error\":9}"));
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }
 
-// void sendDataWs(AsyncWebSocketClient * client)
-// {
-//     DynamicJsonBuffer jsonBuffer;
-//     JsonObject& root = jsonBuffer.createObject();
-//     root["a"] = "abc";
-//     root["b"] = "abcd";
-//     root["c"] = "abcde";
-//     root["d"] = "abcdef";
-//     root["e"] = "abcdefg";
-//     size_t len = root.measureLength();
-//     AsyncWebSocketMessageBuffer * buffer = ws.makeBuffer(len); //  creates a buffer (len + 1) for you.
-//     if (buffer) {
-//         root.printTo((char *)buffer->get(), len + 1);
-//         if (client) {
-//             client->text(buffer);
-//         } else {
-//             ws.textAll(buffer);
-//         }
-//     }
-// }
+void sendDataWs(AsyncWebSocketClient *client)
+{
+    if (!ws.count()) return;
+    doc.clear();
+
+    JsonObject game = doc.createNestedObject("game");
+    dart.serialize(game);
+
+    size_t len = measureJson(doc);
+    os_printf("JSON buffer size: %u for WS request (%u).\n", doc.memoryUsage(), len);
+
+
+    size_t heap1 = ESP.getFreeHeap();
+    Serial.println(F("heap "));
+    Serial.println(ESP.getFreeHeap());
+    if (len > heap1) {
+        Serial.println(F("Out of memory (WS)!"));
+        return;
+    }
+
+    AsyncWebSocketMessageBuffer * buffer;
+    buffer = ws.makeBuffer(len); //  creates a buffer (len + 1) for you.
+
+    size_t heap2 = ESP.getFreeHeap();
+    Serial.println(F("heap "));
+    Serial.println(ESP.getFreeHeap());
+    if (!buffer || heap1-heap2<len) {
+        Serial.println(F("WS buffer allocation failed."));
+        ws.closeAll(1013); //code 1013 = temporary overload, try again later
+        ws.cleanupClients(0); //disconnect all clients to release memory
+        ws._cleanBuffers();
+        return; //out of memory
+    }
+
+    buffer->lock();
+    serializeJson(doc, (char *)buffer->get(), len);
+    Serial.println(F("Sending Websocket data"));
+    if (client) {
+        client->text(buffer);
+        Serial.println(F("to a single client."));
+    } else {
+        ws.textAll(buffer);
+        Serial.println(F("to multiple clients."));
+    }
+    buffer->unlock();
+    ws._cleanBuffers();
+}

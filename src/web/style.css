@@ -103,12 +103,12 @@ button.space {
 }
 
 .btn-remove {
-    width: 50%;
+    width: 45% !important;
     background-color: #a51e1e;
 }
 
 .btn-enter {
-    width: 50%;
+    width: 50% !important;
     background-color: #34a51e;
 }
 
@@ -173,4 +173,9 @@ button.space {
 .x {
     color: #a32828;
     font-weight: 900;
+}
+
+.active {
+    color: #fff !important;
+    background-color: rgba(108, 117, 125, 1);
 }

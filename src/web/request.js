@@ -33,6 +33,24 @@ class CRequest
         }
     }
 
+    async postJson(url, data, cb = null)
+    {
+        try {
+            const response =  await fetch(url, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json(); // response.text()
+            cb(result);
+        } catch (err) {
+            this.handleError(err);
+        }
+    }
+
     handleError(err)
     {
         console.error(err);

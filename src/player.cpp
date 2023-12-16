@@ -20,6 +20,11 @@ void Player::addThrow(DartThrow t)
     this->dartThrows.push_back(t);
 }
 
+bool Player::hasWon()
+{
+    return this->winPos > 0 ? true : false;
+}
+
 String Player:: getCode()
 {
     return this->code;

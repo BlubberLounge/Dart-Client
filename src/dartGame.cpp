@@ -13,17 +13,37 @@ DartGame::DartGame()
 
 void DartGame::nextPlayer()
 {
+    if(this->winCount+1 >= this->players.size()) {
+        this->setStatus(DartGameStatus::done);
+        return;
+    }
+
     this->currentPlayerIndex++;
     this->currentPlayerIndex = this->currentPlayerIndex % this->players.size();
+
+    if(this->players.at(this->currentPlayerIndex).hasWon()) {
+        this->nextPlayer();
+        return;
+    }
+
     this->currentPlayer = &this->players.at(this->currentPlayerIndex);
 }
 
 bool DartGame::addThrow(DartThrow t)
 {
+    if((this->points - this->currentPlayer->getPoints()) < t.getValue()) {
+        this->throwCounter = 0;
+        this->nextPlayer();
+        return false;
+    }
+
     this->currentPlayer->addThrow(t);
     this->throwCounter++;
 
-    if(this->throwCounter >= 3) {
+    if(this->currentPlayer->getPoints() == this->points)
+        this->winCount++;
+
+    if(this->throwCounter >= 3 || this->currentPlayer->getPoints() == this->points) {
         this->throwCounter = 0;
         this->nextPlayer();
     }
@@ -31,30 +51,39 @@ bool DartGame::addThrow(DartThrow t)
     return true;
 }
 
+bool DartGame::isDone()
+{
+    return this->status == DartGameStatus::done;
+}
+
 void DartGame::serialize(JsonObject j)
 {
-    j[F("points")] = this->points;
-    j[F("state")] = this->getStatusString();
-    j[F("currentPlayer")] = this->currentPlayer->getCode();
+    j[F("p")] = this->points;
+    j[F("s")] = this->getStatusString();
+    if(this->currentPlayer) {
+        j[F("cp")] = this->currentPlayer->getCode();
+    } else {
+        j[F("cp")] = "";
+    }
 
     JsonArray players = j.createNestedArray(F("players"));
     for(Player p : this->players) {
         JsonObject player = players.createNestedObject();
-        player[F("code")] = p.getCode();
-        player[F("name")] = p.getName();
-        player[F("points")] = this->points - p.getPoints();
+        player[F("c")] = p.getCode();
+        player[F("n")] = p.getName();
+        player[F("p")] = this->points - p.getPoints();
 
         JsonArray dartThrows = player.createNestedArray(F("throws"));
         for(DartThrow dt : p.dartThrows) {
             JsonObject t = dartThrows.createNestedObject();
-            t[F("value")] = dt.getValue();
+            t[F("v")] = dt.getValue();
         }
     }
 }
 
-void DartGame::deserialize(JsonObject json)
+bool DartGame::deserialize(JsonObject json)
 {
-    // TODO
+    return true;
 }
 
 void DartGame::loadFromFile(String path)

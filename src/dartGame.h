@@ -28,6 +28,7 @@ class DartGame
         Player *currentPlayer = nullptr;
         uint8_t currentPlayerIndex = 0; //use a pointer at a later point
         uint8_t throwCounter = 0;
+        std::size_t winCount = 0;
         const uint16_t points = 301;
         uint8_t turn = 0;   // current turn
 
@@ -35,9 +36,10 @@ class DartGame
         DartGame();
 
         bool addThrow(DartThrow t);
+        bool isDone();
 
         void serialize(JsonObject j);
-        void deserialize(JsonObject j);
+        bool deserialize(JsonObject j);
         void loadFromFile(String path);
         void saveToFile(String path);
 
