@@ -74,7 +74,7 @@ void DartGame::serialize(JsonObject j)
         player[F("p")] = this->points - p.getPoints();
 
         JsonArray dartThrows = player.createNestedArray(F("throws"));
-        for(DartThrow dt : p.dartThrows) {
+        for(DartThrow dt : p.getLastThrows(3)) {
             JsonObject t = dartThrows.createNestedObject();
             t[F("v")] = dt.getValue();
         }
@@ -83,7 +83,24 @@ void DartGame::serialize(JsonObject j)
 
 bool DartGame::deserialize(JsonObject json)
 {
-    return true;
+    bool stateResponse = json[F("d")] | false;
+
+    // serializeJson(json, Serial);
+    if(json.containsKey("gi")) {
+        this->setStatus(DartGameStatus::started);
+    }
+
+    if(json.containsKey("ap")) {
+        String code = json["ap"]["c"];
+        String name = json["ap"]["n"];
+
+        // TODO: verify IEC7064 code
+        // server-side validation
+
+        this->addPlayer(code, name);
+    }
+
+    return stateResponse;
 }
 
 void DartGame::loadFromFile(String path)
@@ -119,6 +136,9 @@ void DartGame::addPlayer(String code, String name)
 
     Player newPlayer(code, name);
     this->players.push_back(newPlayer);
+
+    if(this->players.size() == 1)
+        this->setStatus(DartGameStatus::created);
 }
 
 void DartGame::removePlayer(String code)
@@ -135,7 +155,7 @@ DartGameStatus DartGame::getStatus()
 
 void DartGame::setStatus(DartGameStatus status)
 {
-    if(status == DartGameStatus::created)
+    if(DartGameStatus::started == status)
         this->currentPlayer = &this->players.front();
 
     this->status = status;

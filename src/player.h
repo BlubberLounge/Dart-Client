@@ -13,12 +13,12 @@ class Player
         String code;
         String name;
         uint8_t winPos = 0;
+        std::vector<DartThrow> dartThrows;
+
 
     public:
         Player();
         Player(String code, String name);
-
-        std::vector<DartThrow> dartThrows;
 
         void addThrow(DartThrow t);
 
@@ -27,6 +27,7 @@ class Player
         String getCode();
         String getName();
         uint16_t getPoints();
+        std::vector<DartThrow> getLastThrows(size_t amount);
 
         void setCode(String code);
         void setName(String name);

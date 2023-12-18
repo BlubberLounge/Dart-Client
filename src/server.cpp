@@ -2,7 +2,6 @@
 
 #include "html_other.h"
 #include "html_index.h"
-#include "html_dart.h"
 
 bool isIp(String str)
 {
@@ -91,38 +90,31 @@ void initServer()
         request->send(response);
     });
 
-    server.on("/addPlayer", HTTP_POST, [] (AsyncWebServerRequest *request)
-    {
-        // for mass adding players
-        // for(uint8_t i = 0; i < request->params(); i++) {
-            // int index = request->getParam(i)->value().indexOf(":");
-            // const String code = request->getParam(i)->value().substring(0, index); // index-1, to strip checksum
-            // const String name = request->getParam(i)->value().substring(index+1);
+    // server.on("/addPlayer", HTTP_POST, [] (AsyncWebServerRequest *request)
+    // {
+    //     // for mass adding players
+    //     // for(uint8_t i = 0; i < request->params(); i++) {
+    //         // int index = request->getParam(i)->value().indexOf(":");
+    //         // const String code = request->getParam(i)->value().substring(0, index); // index-1, to strip checksum
+    //         // const String name = request->getParam(i)->value().substring(index+1);
 
-            // dart.addPlayer(code, name);
-        // }
+    //         // dart.addPlayer(code, name);
+    //     // }
 
-        if(!request->hasParam("code", true) || !request->hasParam("name", true)) {
-            request->send(200, "application/json", "{\"message\": \"missing parameter\"}");
-            return;
-        }
+    //     if(!request->hasParam("code", true) || !request->hasParam("name", true)) {
+    //         request->send(200, "application/json", "{\"message\": \"missing parameter\"}");
+    //         return;
+    //     }
 
-        String code = request->getParam("code", true)->value();
-        String name = request->getParam("name", true)->value();
+    //     String code = request->getParam("code", true)->value();
+    //     String name = request->getParam("name", true)->value();
 
-        // TODO: verify IEC7064 code
-        // server-side validation
+    //     // TODO: verify IEC7064 code
+    //     // server-side validation
 
-        dart.addPlayer(code, name);
-        request->send(200, "application/json", "{\"message\": \"ok\"}");
-    });
-
-    server.on("/create", HTTP_POST, [] (AsyncWebServerRequest *request)
-    {
-        dart.setStatus(DartGameStatus::created);
-
-        request->redirect("/game");
-    });
+    //     dart.addPlayer(code, name);
+    //     request->send(200, "application/json", "{\"message\": \"ok\"}");
+    // });
 
     server.on("/state", HTTP_GET, [] (AsyncWebServerRequest *request)
     {
@@ -151,7 +143,7 @@ void initServer()
             dart.setStatus(DartGameStatus::started);
 
         if(dart.getStatus() == DartGameStatus::started || dart.getStatus() == DartGameStatus::running) {
-            response = request->beginResponse_P(200, "text/html", HTML_dart, HTML_dart_L);
+            request->send(200, "text/plain", "Game is currently a");
             response->addHeader("Content-Encoding","gzip");
         } else {
             request->send(200, "text/plain", "Game is currently not available. Current game state: " + dart.getStatusString());
@@ -303,8 +295,13 @@ void sendDataWs(AsyncWebSocketClient *client)
     if (!ws.count()) return;
     doc.clear();
 
-    JsonObject game = doc.createNestedObject("game");
-    dart.serialize(game);
+    if(dart.getStatus() == DartGameStatus::started) {
+        JsonObject game = doc.createNestedObject("game");
+        dart.serialize(game);
+    }
+
+    if(doc.isNull())
+        doc["success"] = true;
 
     size_t len = measureJson(doc);
     os_printf("JSON buffer size: %u for WS request (%u).\n", doc.memoryUsage(), len);

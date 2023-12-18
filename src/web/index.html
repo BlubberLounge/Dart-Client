@@ -26,43 +26,125 @@
     </h1>
 
     <div id="app">
-        <div id="page-index">
+        <div id="page-index" class="container">
             <div class="row">
                 <div class="col">
-                    <button id="btn-newGame"> new game </button>
+                    <ol id="playerlist">
+                        <!-- // -->
+                    </ol>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input type="text" id="newPlayerCode" placeholder="Enter player code" maxlength="10">
+                </div>
+            </div>
+            <div class="row" style="margin-top: .5rem;">
+                <div class="col">
+                    <input type="text" id="newPlayerName" placeholder="Enter player name" maxlength="50">
+                </div>
+            </div>
+            <div class="row" style="margin-top: 1rem;">
+                <div class="col">
+                    <button id="btn-addPlayer"> Add </button>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 1rem;">
+                <div id="errorMsg" class="errorMsg"></div>
+            </div>
+            <div class="row" style="margin-top: 2rem;justify-content: center;">
+                <div class="col-a">
+                    <button id="btn-startGame" class="button"> Start game </button>
                 </div>
             </div>
         </div>
-        <div id="page-createGame" class="hidden">
-            <form action="/create" method="POST" class="container">
-                <div class="row">
-                    <ol id="playerlist">
-
-                    </ol>
+        <div id="page-game" class="container hidden">
+            <div id="p12" class="row">
+                <div id="p1" class="col">
+                    <div class="playercard-skeleton skeleton"></div>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <input type="text" id="newPlayerCode" placeholder="Enter player code" maxlength="10">
+                <div id="p2" class="col">
+                    <div class="playercard-skeleton skeleton"></div>
+                </div>
+            </div>
+            <div id="p34" class="row" style="margin-top: 1.5rem;">
+                <div id="p3" class="col">
+                    <div class="playercard-skeleton skeleton"></div>
+                </div>
+                <div id="p4" class="col">
+                    <div class="playercard-skeleton skeleton"></div>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 2rem; justify-content: center;">
+                <input type="text" name="" id="display" style="font-size: 1.75rem;padding:1rem;width:8rem;" maxlength="4" pattern="[0-9BDT]{4}" title="Dart symbols only" readonly>
+            </div>
+            <div class="row" style="margin-top: 2rem; justify-content: center;">
+                <div id="numpad">
+                    <div class="numpad_row">
+                        <button data-bl-value="1">1</button>
+                        <button data-bl-value="2">2</button>
+                        <button data-bl-value="3">3</button>
+                        <button data-bl-value="4">4</button>
+                        <button data-bl-value="5">5</button>
                     </div>
-                    <div class="col">
-                        <input type="text" id="newPlayerName" placeholder="Enter player name" maxlength="50">
+                    <div class="numpad_row">
+                        <button data-bl-value="6">6</button>
+                        <button data-bl-value="7">7</button>
+                        <button data-bl-value="8">8</button>
+                        <button data-bl-value="9">9</button>
+                        <button data-bl-value="10">10</button>
+                    </div>
+                    <div class="numpad_row">
+                        <button data-bl-value="11">11</button>
+                        <button data-bl-value="12">12</button>
+                        <button data-bl-value="13">13</button>
+                        <button data-bl-value="14">14</button>
+                        <button data-bl-value="15">15</button>
+                    </div>
+                    <div class="numpad_row">
+                        <button data-bl-value="16">16</button>
+                        <button data-bl-value="17">17</button>
+                        <button data-bl-value="18">18</button>
+                        <button data-bl-value="19">19</button>
+                        <button data-bl-value="20">20</button>
+                    </div>
+                    <div class="numpad_row">
+                        <button class="space" data-bl-value="0">0</button>
+                        <button data-bl-value="25">Bull</button>
+                        <button data-bl-value="D">D</button>
+                        <button data-bl-value="T">T</button>
+                    </div>
+                    <div class="numpad_row">
+                        <button id="remove" class="btn-remove"> ⟵ </button>
+                        <button id="enter" class="btn-enter"> Enter </button>
                     </div>
                 </div>
-                <div class="row" style="margin: 1rem 0;">
-                    <div class="col">
-                        <button id="btn-addPlayer"> Add </button>
-                    </div>
-                </div>
-                <div class="row" style="margin: 1rem 0;">
-                    <div id="errorMsg" class="errorMsg"></div>
-                </div>
-                <div class="row" style="margin-top: 2rem;">
-                    <div class="col">
-                        <button id="btn-startGame" class="button"> Start game </button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
+
+    <nav>
+        <div class="row">
+            <div class="col" data-page="index">
+                <div class="active text-center" >
+                    Menu
+                </div>
+                <a href="#" onclick="showPage(document.getElementById('page-index'))">
+                    Step 1
+                    <!-- <img src="https://events-dev.blubber-lounge.de/icon/ticket-xmark.svg" class="hasNotification" width="35px"> -->
+                </a>
+            </div>
+            <div class="col" data-page="game">
+                <a href="#" onclick="showPage(document.getElementById('page-game'))">
+                    Step 2
+                </a>
+            </div>
+            <div class="col">
+                <a href="#">
+                    Settings
+                </a>
+            </div>
+        </div>
+    </nav>
 </body>
 </html>

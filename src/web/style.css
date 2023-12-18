@@ -1,5 +1,6 @@
 * {
     --clr-main: #3479c3;
+    --clr-bg-nav: #454545;
 }
 
 body {
@@ -34,6 +35,14 @@ button {
 
 button:hover {
     background-color: #275d97;
+}
+
+input {
+    color: #d1d1d1;
+    background-color: transparent;
+    padding: .5em .725em;
+    border: 1px solid #d1d1d1;
+    border-radius: .325rem;
 }
 
 .row {
@@ -81,6 +90,10 @@ button:hover {
     margin-top: .5rem;
 }
 
+#playerlist {
+    padding-left: 1rem;
+}
+
 #numpad {
     width: auto;
 }
@@ -100,6 +113,12 @@ button:hover {
 
 button.space {
     margin-right: 4.75rem;
+}
+
+#btn-addPlayer,
+#btn-settings,
+#btn-newGame {
+    width: 100%;
 }
 
 .btn-remove {
@@ -178,4 +197,66 @@ button.space {
 .active {
     color: #fff !important;
     background-color: rgba(108, 117, 125, 1);
+}
+
+nav {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--clr-bg-nav);
+    padding: 0.8em 0;
+}
+
+nav .col {
+    position: relative;
+}
+
+nav a {
+    color: #ddd;
+    font-size: 1rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+nav .active {
+    top: -33px;
+    position: absolute;
+    width: 70%;
+    height: 23px;
+    background-color: var(--clr-bg-nav);
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    color: #e6e6e6;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    text-align: center;
+}
+
+nav .active::before {
+    content: "";
+    position: absolute;
+    background-color: transparent;
+    width: 30px;
+    height: 10px;
+    left: -30px;
+    bottom: 0;
+    border-bottom-right-radius: 8px;
+    box-shadow: 11px 0 0 0 var(--clr-bg-nav);
+}
+
+nav .active::after {
+    content: "";
+    position: absolute;
+    background-color: transparent;
+    width: 30px;
+    height: 10px;
+    right: -30px;
+    bottom: 0;
+    border-bottom-left-radius: 8px;
+    box-shadow: -11px 0 0 0 var(--clr-bg-nav);
 }
