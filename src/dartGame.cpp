@@ -2,6 +2,7 @@
 #include "DartGame.h"
 #include "Player.h"
 #include "const.h"
+#include "Display.h"
 
 /**
  *  Constructor
@@ -38,6 +39,9 @@ bool DartGame::addThrow(DartThrow t)
     }
 
     this->currentPlayer->addThrow(t);
+
+    display.setPoints((this->points - this->currentPlayer->getPoints()));
+
     this->throwCounter++;
 
     if(this->currentPlayer->getPoints() == this->points)

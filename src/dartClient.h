@@ -38,9 +38,13 @@ GLOBAL_VAR char cmDNS[33] _INIT(MDNS_NAME);
 GLOBAL_VAR bool ap_active _INIT(false);
 GLOBAL_VAR StaticJsonDocument<10240> doc;
 
-#include "DartGame.h"
+GLOBAL_VAR CRGB leds[256];
 
+#include "Display.h"
+
+#include "DartGame.h"
 GLOBAL_VAR DartGame dart;
+
 
 class dartClient
 {
@@ -63,6 +67,8 @@ class dartClient
 
         void initStorage();
         void initConnection();
+        void initDisplay();
+
         void handleConnection();
         void handleWeb();
 };

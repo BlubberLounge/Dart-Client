@@ -1,4 +1,4 @@
-#define DEFINE_GLOBAL_VARS //only in one source file, wled.cpp!
+#define DEFINE_GLOBAL_VARS //only in one source file
 #include "dartClient.h"
 
 #include <Arduino.h>
@@ -14,6 +14,9 @@ dartClient::dartClient()
 
 void dartClient::init()
 {
+    // sanity check delay - allows reprogramming if accidently blowing power w/leds
+    delay(2000);
+
     Serial.begin(115200);
 
     Serial.println();
@@ -23,6 +26,7 @@ void dartClient::init()
 
     initStorage();
     initConnection();
+    initDisplay();
 
     // initilaize all web server routes
     initServer();
@@ -106,6 +110,21 @@ void dartClient::initConnection()
     } else {
         Serial.println(WiFi.localIP());
     }
+}
+
+void dartClient::initDisplay()
+{
+    FastLED.setMaxPowerInVoltsAndMilliamps(5, 450);
+    FastLED.setBrightness( 8 );
+    FastLED.addLeds<WS2812B, 4, GRB>(leds, 256);
+
+    FastLED.clear();
+
+    leds[0] = CRGB::Green;
+
+    display.setPoints(41);
+
+    Serial.println("Display init");
 }
 
 void dartClient::handleConnection()

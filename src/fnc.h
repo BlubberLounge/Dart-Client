@@ -10,6 +10,10 @@
  *
  */
 
+int getPixelIndexByXY(uint8_t x, uint8_t y);
+void setPixel(int index);
+
+
 bool isIp(String str);
 void initServer();
 bool captivePortal(AsyncWebServerRequest *request);
