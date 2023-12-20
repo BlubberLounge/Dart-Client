@@ -12,6 +12,7 @@ class Player
     protected:
         String code;
         String name;
+        uint32_t color;
         uint8_t winPos = 0;
         std::vector<DartThrow> dartThrows;
 
@@ -19,6 +20,7 @@ class Player
     public:
         Player();
         Player(String code, String name);
+        Player(String code, String name, uint32_t color);
 
         void addThrow(DartThrow t);
 
@@ -26,6 +28,7 @@ class Player
 
         String getCode();
         String getName();
+        uint32_t getColor();
         uint16_t getPoints();
         std::vector<DartThrow> getLastThrows(size_t amount);
 

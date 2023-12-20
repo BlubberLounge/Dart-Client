@@ -28,6 +28,9 @@ void DartGame::nextPlayer()
     }
 
     this->currentPlayer = &this->players.at(this->currentPlayerIndex);
+
+    display.setPlayerIndicator(this->currentPlayer->getColor());
+    display.setPoints((this->points - this->currentPlayer->getPoints()));
 }
 
 bool DartGame::addThrow(DartThrow t)
@@ -104,6 +107,15 @@ bool DartGame::deserialize(JsonObject json)
         this->addPlayer(code, name);
     }
 
+    if(json.containsKey("th")) {
+        if(this->getStatus() != DartGameStatus::running)
+            this->setStatus(DartGameStatus::running);
+
+        DartThrow t;
+        t.setValue(json["th"]["value"]);
+        dart.addThrow(t);
+    }
+
     return stateResponse;
 }
 
@@ -138,7 +150,7 @@ void DartGame::addPlayer(String code, String name)
     if(this->players.size() >= MAX_DARTPLAYER)
         return;
 
-    Player newPlayer(code, name);
+    Player newPlayer(code, name, CRGB::Red);
     this->players.push_back(newPlayer);
 
     if(this->players.size() == 1)
@@ -159,8 +171,12 @@ DartGameStatus DartGame::getStatus()
 
 void DartGame::setStatus(DartGameStatus status)
 {
-    if(DartGameStatus::started == status)
+    if(DartGameStatus::started == status) {
         this->currentPlayer = &this->players.front();
+
+        display.setPlayerIndicator(this->currentPlayer->getColor());
+        display.setPoints((this->points - this->currentPlayer->getPoints()));
+    }
 
     this->status = status;
 }

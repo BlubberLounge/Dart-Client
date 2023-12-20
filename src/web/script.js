@@ -130,16 +130,14 @@ d.addEventListener('DOMContentLoaded', function ()
             field = display[0];
         }
 
-        const t = {
-            ring: ring,
-            field: field,
-            value: field * multiplier
-        };
-
-        req.postJson('/addThrow', t, () => {
-            update()
-            clearDisplay()
+        websocketRequest({
+            th: {
+                ring: ring,
+                field: field,
+                value: field * multiplier
+            }
         });
+        clearDisplay();
     });
 
     d.getElementById('remove').addEventListener('click', e => {
@@ -195,13 +193,16 @@ function webS()
 
 	ws.onmessage = (e) => {
 		var json = JSON.parse(e.data);
-        if(json.game)
+        if(json.game) {
             if(currentPage.id != d.getElementById('page-game').id && json.game.s != "unkown")
                 showPage(d.getElementById('page-game'));
 
-        if(!initialized && currentPage.id == d.getElementById('page-game').id && json.game)
-            initGame(json.game);
+            if(!initialized && currentPage.id == d.getElementById('page-game').id)
+                initGame(json.game);
 
+            if(initialized)
+                update(json.game);
+        }
 	};
 	ws.onclose = (e) => {
 		ws = null;
@@ -253,28 +254,23 @@ function addToDisplay(data)
     display.push(data);
 }
 
-function update()
+function update(game)
 {
-    req.get('/state', function(e)
-    {
-        let game = e.game;
-        let players = game.players;
+    let players = game.players;
 
-        [...d.querySelectorAll(`.playercard.active`)].map(el => {
-            el.classList.remove("active");
-        });
-
-        for(const [i, player] of players.entries())
-        {
-            let html = d.querySelector(`[data-user-id="${player.c}"]`);
-
-            if(game.cp == player.c)
-                html.classList.add('active');
-
-            if(player.throws.length > 0)
-                html.querySelector(`.playercard-total-points`).innerHTML = game.p - player.throws.reduce((s, i) => s + parseInt(i.v), 0);
-        }
+    [...d.querySelectorAll(`.playercard.active`)].map(el => {
+        el.classList.remove("active");
     });
+
+    for(const [i, player] of players.entries())
+    {
+        let html = d.querySelector(`[data-user-id="${player.c}"]`);
+
+        if(game.cp == player.c)
+            html.classList.add('active');
+
+        html.querySelector(`.playercard-total-points`).innerHTML = player.p;
+    }
 }
 
 function initGame(data)
@@ -312,6 +308,8 @@ function initGame(data)
             updateDisplay();
         });
     });
+
+    initialized = true;
 }
 
 function generatePlayercard(player)

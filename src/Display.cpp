@@ -9,44 +9,7 @@
  */
 Display::Display()
 {
-    // get pixel indexes
-    for(uint8_t i = 0; i < (sizeof(this->points) / sizeof(points[0])); i++)
-    {
-        uint8_t offset = 6 * i;
-
-        // 1
-        this->points[i].n[0] = getPixelIndexByXY(1 + offset, 8);
-        this->points[i].n[1] = getPixelIndexByXY(2 + offset, 8);
-
-        // 2
-        this->points[i].nw[0] = getPixelIndexByXY(0 + offset, 5);
-        this->points[i].nw[1] = getPixelIndexByXY(0 + offset, 6);
-        this->points[i].nw[2] = getPixelIndexByXY(0 + offset, 7);
-
-        // 3
-        this->points[i].ne[0] = getPixelIndexByXY(3 + offset, 5);
-        this->points[i].ne[1] = getPixelIndexByXY(3 + offset, 6);
-        this->points[i].ne[2] = getPixelIndexByXY(3 + offset, 7);
-
-        // 4
-        this->points[i].c[0] = getPixelIndexByXY(1 + offset, 4);
-        this->points[i].c[1] = getPixelIndexByXY(2 + offset, 4);
-
-        // 5
-        this->points[i].sw[0] = getPixelIndexByXY(0 + offset, 1);
-        this->points[i].sw[1] = getPixelIndexByXY(0 + offset, 2);
-        this->points[i].sw[2] = getPixelIndexByXY(0 + offset, 3);
-
-        // 6
-        this->points[i].se[0] = getPixelIndexByXY(3 + offset, 1);
-        this->points[i].se[1] = getPixelIndexByXY(3 + offset, 2);
-        this->points[i].se[2] = getPixelIndexByXY(3 + offset, 3);
-
-        // 7
-        this->points[i].s[0] = getPixelIndexByXY(1 + offset, 0);
-        this->points[i].s[1] = getPixelIndexByXY(2 + offset, 0);
-    }
-
+    //
 }
 
 void Display::PointSegment::drawNumber(unsigned char chr, uint8_t origin_x, uint32_t color)
@@ -68,7 +31,7 @@ void Display::PointSegment::drawNumber(unsigned char chr, uint8_t origin_x, uint
 
 void Display::setPoints(int num)
 {
-    FastLED.clear();
+    // FastLED.clear(true);
     if(num > 999)
         return;
 
@@ -85,8 +48,21 @@ void Display::setPoints(int num)
     for(uint8_t i = 0; i < (sizeof(chrs) / sizeof(chrs[0])); i++)
         this->points[i].drawNumber(chrs[i], ((width + space) * i) + offset, 0xffffff);
 
-    delay(1);
     FastLED.show();
+}
+
+void Display::setPlayerIndicator(uint32_t clr)
+{
+    for(int i = 2; i < 14; i++) {
+        setPixelXY(i, 15-1, clr);
+        setPixelXY(i, 15-2, clr);
+        setPixelXY(i, 15-3, clr);
+
+        setPixelBri(i, 15-1, 128);
+        setPixelBri(i, 15-2, 128);
+        setPixelBri(i, 15-3, 128);
+    }
+
     FastLED.show();
 }
 

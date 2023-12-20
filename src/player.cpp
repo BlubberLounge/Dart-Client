@@ -15,6 +15,13 @@ Player::Player(String code, String name)
     this->name = name;
 }
 
+Player::Player(String code, String name, uint32_t color)
+{
+    this->code = code;
+    this->name = name;
+    this->color = color;
+}
+
 void Player::addThrow(DartThrow t)
 {
     this->dartThrows.push_back(t);
@@ -33,6 +40,11 @@ String Player:: getCode()
 String Player::getName()
 {
     return this->name;
+}
+
+uint32_t Player::getColor()
+{
+    return this->color;
 }
 
 uint16_t Player::getPoints()

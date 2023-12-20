@@ -14,16 +14,10 @@ class Display
     public:
         Display();
         void setPoints(int num);
+        void setPlayerIndicator(uint32_t clr);
 
     typedef struct PointSegment
     {
-        int n[2];
-        int nw[3];
-        int ne[3];
-        int c[2];
-        int sw[3];
-        int se[3];
-        int s[2];
         public:
             void drawNumber(unsigned char chr, uint8_t origin_x, uint32_t color);
             void clear();

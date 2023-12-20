@@ -153,26 +153,6 @@ void initServer()
         request->send(response);
     });
 
-    AsyncCallbackJsonWebHandler* handler = new AsyncCallbackJsonWebHandler("/addThrow", [](AsyncWebServerRequest *request, JsonVariant &json)
-    {
-        if(dart.getStatus() == DartGameStatus::started)
-            dart.setStatus(DartGameStatus::running);
-
-        const JsonObject &obj = json.as<JsonObject>();
-        uint8_t value = obj["value"];
-
-        DartThrow t;
-        t.setValue(value);
-        dart.addThrow(t);
-        if(dart.isDone()) {
-            request->redirect("/stats");
-        } else {
-            request->send(200, "application/json", "{\"message\": \"ok\"}");
-        }
-
-    }, 10240);
-    server.addHandler(handler);
-
     ws.onEvent(onEvent);
     server.addHandler(&ws);
 
@@ -295,7 +275,7 @@ void sendDataWs(AsyncWebSocketClient *client)
     if (!ws.count()) return;
     doc.clear();
 
-    if(dart.getStatus() == DartGameStatus::started) {
+    if(dart.getStatus() == DartGameStatus::started || dart.getStatus() == DartGameStatus::running) {
         JsonObject game = doc.createNestedObject("game");
         dart.serialize(game);
     }

@@ -12,6 +12,8 @@
 
 int getPixelIndexByXY(uint8_t x, uint8_t y);
 void setPixel(int index);
+void setPixelXY(uint8_t x, uint8_t y, uint32_t clr);
+void setPixelBri(uint8_t x, uint8_t y, uint8_t bri);
 
 
 bool isIp(String str);

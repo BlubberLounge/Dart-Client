@@ -122,7 +122,8 @@ void dartClient::initDisplay()
 
     leds[0] = CRGB::Green;
 
-    display.setPoints(41);
+    display.setPoints(888);
+    display.setPlayerIndicator(CRGB::GreenYellow);
 
     Serial.println("Display init");
 }
