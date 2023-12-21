@@ -278,7 +278,11 @@ void sendDataWs(AsyncWebSocketClient *client)
     if(dart.getStatus() == DartGameStatus::started || dart.getStatus() == DartGameStatus::running) {
         JsonObject game = doc.createNestedObject("game");
         dart.serialize(game);
+    } else if(dart.getStatus() == DartGameStatus::done) {
+        JsonObject g = doc.createNestedObject("g");
+        g["s"] = dart.getStatusString();
     }
+
 
     if(doc.isNull())
         doc["success"] = true;

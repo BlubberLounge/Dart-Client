@@ -31,7 +31,8 @@ d.addEventListener('DOMContentLoaded', function ()
 
         var playerCode = d.getElementById('newPlayerCode').value;
         var playerName = d.getElementById('newPlayerName').value;
-        if(playerCode === "" || playerCode === null || playerName === "" || playerName === null)
+        var playerColor = d.querySelector('input[name="color"]:checked').value;
+        if(playerCode === "" || playerCode === null || playerName === "" || playerName === null || playerColor === null)
             return;
 
 
@@ -54,7 +55,8 @@ d.addEventListener('DOMContentLoaded', function ()
         websocketRequest({
             ap: {
                 c: playerCode,
-                n: playerName
+                n: playerName,
+                clr: playerColor
             }
         });
 
@@ -73,8 +75,14 @@ d.addEventListener('DOMContentLoaded', function ()
         // }
 
         const nextPlayerNumber = playerCount + 1;
+
         const newItem = d.createElement('li');
         newItem.innerHTML = playerName;
+
+        const colorBox = d.createElement('div');
+        colorBox.classList.add(playerColor, "colorBox");
+        newItem.appendChild(colorBox);
+
         const newHidden = d.createElement('input');
         newHidden.type = 'hidden';
         newHidden.id = 'hp' + nextPlayerNumber;
@@ -100,15 +108,9 @@ d.addEventListener('DOMContentLoaded', function ()
     });
 
     d.getElementById('btn-startGame').addEventListener('click', e => {
-        showPage(page_game);
         websocketRequest({
             gi: true
         });
-        // req.get('/state', function(e)
-        // {
-        //     initGame(e.game);
-        //     initialized = true;
-        // });
     });
 
     d.getElementById('enter').addEventListener('click', e => {
@@ -158,6 +160,12 @@ function showPage(page)
     if(page === undefined)
         return;
 
+    if(page == d.getElementById('page-game') && !initialized)
+        return;
+
+    if(page == d.getElementById('page-index') && initialized)
+        return;
+
     let nav = d.querySelector("nav");
     let navActive = nav.querySelector(".active");
     navActive.remove();
@@ -197,7 +205,7 @@ function webS()
             if(currentPage.id != d.getElementById('page-game').id && json.game.s != "unkown")
                 showPage(d.getElementById('page-game'));
 
-            if(!initialized && currentPage.id == d.getElementById('page-game').id)
+            if(!initialized)
                 initGame(json.game);
 
             if(initialized)
@@ -270,11 +278,17 @@ function update(game)
             html.classList.add('active');
 
         html.querySelector(`.playercard-total-points`).innerHTML = player.p;
+
+        for(let j = 0; j <= 2; j++)
+            html.querySelector(`.throw-${(j+1)}`).innerHTML = player.throws[j] != undefined ? player.throws[j].v : 'X';
     }
 }
 
 function initGame(data)
 {
+    initialized = true;
+    showPage(d.getElementById("page-game"));
+
     for(const [i, player] of data.players.entries()) {
         const p = {
             id: player.c,
@@ -308,8 +322,6 @@ function initGame(data)
             updateDisplay();
         });
     });
-
-    initialized = true;
 }
 
 function generatePlayercard(player)

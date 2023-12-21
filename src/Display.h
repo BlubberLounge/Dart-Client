@@ -9,20 +9,20 @@ class Display
 {
     private:
 
+        struct PointSegment
+        {
+            void drawNumber(unsigned char chr, uint8_t origin_x, uint32_t color);
+        };
     protected:
 
     public:
         Display();
         void setPoints(int num);
         void setPlayerIndicator(uint32_t clr);
+        void setThrowIndicator(uint8_t num);
 
-    typedef struct PointSegment
-    {
-        public:
-            void drawNumber(unsigned char chr, uint8_t origin_x, uint32_t color);
-            void clear();
-    } psegment;
-    psegment points[3];
+        void clearPoints();
+    PointSegment points[3];
 
 };
 

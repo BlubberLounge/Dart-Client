@@ -117,8 +117,17 @@ button.space {
 
 #btn-addPlayer,
 #btn-settings,
-#btn-newGame {
+#btn-newGame,
+#abort {
     width: 100%;
+}
+
+.btn-abort {
+    background-color: #d19c2c;
+}
+
+.btn-abort:hover {
+    background-color: #775a1a;
 }
 
 .btn-remove {
@@ -126,9 +135,17 @@ button.space {
     background-color: #a51e1e;
 }
 
+.btn-remove:hover {
+    background-color: #6e1414;
+}
+
 .btn-enter {
     width: 50% !important;
     background-color: #34a51e;
+}
+
+.btn-enter:hover {
+    background-color: #216913;
 }
 
 .skeleton {
@@ -259,4 +276,94 @@ nav .active::after {
     bottom: 0;
     border-bottom-left-radius: 8px;
     box-shadow: -11px 0 0 0 var(--clr-bg-nav);
+}
+
+input[type=radio] {
+    display: none;
+}
+
+input[type=radio]:checked + label span {
+    transform: scale(1.25);
+}
+
+input[type=radio]:checked + label .red {
+    border: 2px solid #711313;
+}
+
+input[type=radio]:checked + label .orange {
+    border: 2px solid #873a08;
+}
+
+input[type=radio]:checked + label .yellow {
+    border: 2px solid #816102;
+}
+
+input[type=radio]:checked + label .green {
+    border: 2px solid #0e4e1d;
+}
+
+input[type=radio]:checked + label .blue {
+    border: 2px solid #103f62;
+}
+
+input[type=radio]:checked + label .pink {
+    border: 2px solid #851554;
+}
+
+label {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+label ~ label {
+    margin-left: 10px;
+}
+
+label:hover span {
+    transform: scale(1.25);
+}
+
+label span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.2s ease-in-out;
+}
+
+label span.red,
+.r {
+    background: #db2828;
+}
+
+label span.orange,
+.o {
+    background: #f2711c;
+}
+
+label span.yellow,
+.y {
+    background: #fbbd08;
+}
+
+label span.green,
+.g {
+    background: #21ba45;
+}
+
+label span.blue,
+.b {
+    background: #2185d0;
+}
+
+label span.pink,
+.p {
+    background: #e03997;
+}
+
+.colorBox {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
 }

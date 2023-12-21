@@ -44,6 +44,24 @@
                     <input type="text" id="newPlayerName" placeholder="Enter player name" maxlength="50">
                 </div>
             </div>
+            <div class="row" class="color-selection" style="margin-top: 1rem;justify-content: center;">
+                <div class="col-a">
+                    <input type="radio" name="color" id="red" value="r" checked/>
+                    <label for="red"><span class="red"></span></label>
+
+                    <input type="radio" name="color" id="green" value="g" />
+                    <label for="green"><span class="green"></span></label>
+
+                    <input type="radio" name="color" id="orange" value="o" />
+                    <label for="orange"><span class="orange"></span></label>
+
+                    <input type="radio" name="color" id="blue" value="b" />
+                    <label for="blue"><span class="blue"></span></label>
+
+                    <input type="radio" name="color" id="pink" value="p" />
+                    <label for="pink"><span class="pink"></span></label>
+                </div>
+            </div>
             <div class="row" style="margin-top: 1rem;">
                 <div class="col">
                     <button id="btn-addPlayer"> Add </button>
@@ -118,6 +136,9 @@
                         <button id="remove" class="btn-remove"> ⟵ </button>
                         <button id="enter" class="btn-enter"> Enter </button>
                     </div>
+                    <div class="numpad_row">
+                        <button id="abort" class="btn-abort"> Abort </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -130,13 +151,13 @@
                     Menu
                 </div>
                 <a href="#" onclick="showPage(document.getElementById('page-index'))">
-                    Step 1
+                    Setup
                     <!-- <img src="https://events-dev.blubber-lounge.de/icon/ticket-xmark.svg" class="hasNotification" width="35px"> -->
                 </a>
             </div>
             <div class="col" data-page="game">
                 <a href="#" onclick="showPage(document.getElementById('page-game'))">
-                    Step 2
+                    Game
                 </a>
             </div>
             <div class="col">

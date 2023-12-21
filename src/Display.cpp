@@ -31,13 +31,14 @@ void Display::PointSegment::drawNumber(unsigned char chr, uint8_t origin_x, uint
 
 void Display::setPoints(int num)
 {
-    // FastLED.clear(true);
     if(num > 999)
         return;
 
     uint8_t offset = 0;
     if(num < 100)
         offset = 3;
+
+    this->clearPoints();
 
     const uint8_t width = 4;
     const uint8_t space = 2;
@@ -53,16 +54,46 @@ void Display::setPoints(int num)
 
 void Display::setPlayerIndicator(uint32_t clr)
 {
-    for(int i = 2; i < 14; i++) {
+    for(int i = 5; i < 11; i++) {
         setPixelXY(i, 15-1, clr);
         setPixelXY(i, 15-2, clr);
         setPixelXY(i, 15-3, clr);
+        setPixelXY(i, 15-4, clr);
 
-        setPixelBri(i, 15-1, 128);
-        setPixelBri(i, 15-2, 128);
-        setPixelBri(i, 15-3, 128);
+        setPixelBri(i, 15-1, 64);
+        setPixelBri(i, 15-2, 64);
+        setPixelBri(i, 15-3, 64);
+        setPixelBri(i, 15-4, 64);
     }
 
+    setPixelXY(5, 14, CRGB::Black);
+    setPixelXY(10, 14, CRGB::Black);
+    setPixelXY(5, 11, CRGB::Black);
+    setPixelXY(10, 11, CRGB::Black);
+
+    FastLED.show();
+}
+
+void Display::setThrowIndicator(uint8_t num)
+{
+    if(num > 3) // 3 or less
+        return;
+
+    for (int i = 0; i < 3; i++)
+        setPixelXY(14, 11 + i*2, CRGB::Black);
+
+    for (int i = 0; i < num; i++)
+        setPixelXY(14, 11 + i*2, CRGB::BlueViolet);
+
+    FastLED.show();
+}
+
+
+void Display::clearPoints()
+{
+    for (int i = 0; i < 16; i++)
+        for (int j = 0; j < 9; j++)
+            setPixelXY(i, j, CRGB::Black);
     FastLED.show();
 }
 

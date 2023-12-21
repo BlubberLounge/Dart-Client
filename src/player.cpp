@@ -61,8 +61,11 @@ std::vector<DartThrow> Player::getLastThrows(size_t amount)
     std::vector<DartThrow> t;
     uint8_t n = (this->dartThrows.size() % amount);
 
-    if(n <= 0)
+    if(n <= 0 && this->dartThrows.size() >= amount) {
+        n = amount;
+    } else if(n <= 0) {
         return t;
+    }
 
     if(this->dartThrows.size() <= n)
         return this->dartThrows;

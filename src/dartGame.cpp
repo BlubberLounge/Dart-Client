@@ -31,6 +31,7 @@ void DartGame::nextPlayer()
 
     display.setPlayerIndicator(this->currentPlayer->getColor());
     display.setPoints((this->points - this->currentPlayer->getPoints()));
+    display.setThrowIndicator(3);
 }
 
 bool DartGame::addThrow(DartThrow t)
@@ -46,6 +47,7 @@ bool DartGame::addThrow(DartThrow t)
     display.setPoints((this->points - this->currentPlayer->getPoints()));
 
     this->throwCounter++;
+    display.setThrowIndicator(3-this->throwCounter);
 
     if(this->currentPlayer->getPoints() == this->points)
         this->winCount++;
@@ -100,11 +102,27 @@ bool DartGame::deserialize(JsonObject json)
     if(json.containsKey("ap")) {
         String code = json["ap"]["c"];
         String name = json["ap"]["n"];
+        String clr = json["ap"]["clr"];
+        uint32_t color;
 
-        // TODO: verify IEC7064 code
+        if(clr == "r"){
+            color = CRGB::Red;
+        } else if(clr == "g") {
+            color = CRGB::Green;
+        } else if(clr == "o") {
+            color = CRGB::Orange;
+        } else if(clr == "b") {
+            color = CRGB::Blue;
+        } else if(clr == "p") {
+            color = CRGB::Magenta;
+        } else {
+            color = CRGB::Black;
+        }
+
+        // verify IEC7064 code
         // server-side validation
 
-        this->addPlayer(code, name);
+        this->addPlayer(code, name, color);
     }
 
     if(json.containsKey("th")) {
@@ -145,12 +163,12 @@ String DartGame::listPlayers()
     return res;
 }
 
-void DartGame::addPlayer(String code, String name)
+void DartGame::addPlayer(String code, String name, uint32_t color)
 {
     if(this->players.size() >= MAX_DARTPLAYER)
         return;
 
-    Player newPlayer(code, name, CRGB::Red);
+    Player newPlayer(code, name, color);
     this->players.push_back(newPlayer);
 
     if(this->players.size() == 1)
@@ -176,6 +194,7 @@ void DartGame::setStatus(DartGameStatus status)
 
         display.setPlayerIndicator(this->currentPlayer->getColor());
         display.setPoints((this->points - this->currentPlayer->getPoints()));
+        display.setThrowIndicator(3);
     }
 
     this->status = status;

@@ -8,6 +8,9 @@
 class Player
 {
     private:
+        struct Turn {
+            DartThrow throws[3];
+        };
 
     protected:
         String code;

@@ -44,7 +44,7 @@ class DartGame
         void saveToFile(String path);
 
         String listPlayers();
-        void addPlayer(String code, String name);
+        void addPlayer(String code, String name, uint32_t color);
         void removePlayer(String code);
         void resetPlayer();
         // void setCurrentPlayer(Player &player);
