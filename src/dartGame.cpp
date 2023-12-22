@@ -49,8 +49,10 @@ bool DartGame::addThrow(DartThrow t)
     this->throwCounter++;
     display.setThrowIndicator(3-this->throwCounter);
 
-    if(this->currentPlayer->getPoints() == this->points)
+    if(this->currentPlayer->getPoints() == this->points) {
         this->winCount++;
+        this->currentPlayer->setWinPos(winCount);
+    }
 
     if(this->throwCounter >= 3 || this->currentPlayer->getPoints() == this->points) {
         this->throwCounter = 0;
@@ -96,7 +98,13 @@ bool DartGame::deserialize(JsonObject json)
 
     // serializeJson(json, Serial);
     if(json.containsKey("gi")) {
+        this->points = json[F("p")];
         this->setStatus(DartGameStatus::started);
+    }
+
+    if(json.containsKey("sc")) {
+        if(json[F("sc")] == "abort")
+            this->setStatus(DartGameStatus::aborted);
     }
 
     if(json.containsKey("ap")) {
@@ -125,7 +133,7 @@ bool DartGame::deserialize(JsonObject json)
         this->addPlayer(code, name, color);
     }
 
-    if(json.containsKey("th")) {
+    if(json.containsKey("th") && (this->getStatus() == DartGameStatus::started || this->getStatus() == DartGameStatus::running)) {
         if(this->getStatus() != DartGameStatus::running)
             this->setStatus(DartGameStatus::running);
 
@@ -195,6 +203,8 @@ void DartGame::setStatus(DartGameStatus status)
         display.setPlayerIndicator(this->currentPlayer->getColor());
         display.setPoints((this->points - this->currentPlayer->getPoints()));
         display.setThrowIndicator(3);
+    } else if(DartGameStatus::aborted == status || DartGameStatus::done == status ) {
+        this->reset();
     }
 
     this->status = status;
@@ -213,4 +223,19 @@ String DartGame::getStatusString()
         case DartGameStatus::error: return "error"; break;
         default: return "unkown"; break;
     }
+}
+
+void DartGame::reset()
+{
+    display.setPlayerIndicator(CRGB::Black);
+    display.setPoints(000);
+    display.setThrowIndicator(0);
+
+    this->currentPlayer = nullptr;
+    this->players.clear();
+    this->currentPlayerIndex = 0;
+    this->points = 301;
+    this->throwCounter = 0;
+    this->winCount = 0;
+    this->setStatus(DartGameStatus::unkown);
 }

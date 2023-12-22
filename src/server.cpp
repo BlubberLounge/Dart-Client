@@ -66,6 +66,11 @@ void initServer()
         request->send(200, "text/plain", (String)ESP.getFreeHeap());
     });
 
+    server.on("/fps", HTTP_GET, [](AsyncWebServerRequest *request)
+    {
+        request->send(200, "text/plain", (String)FastLED.getFPS());
+    });
+
     server.on("/isOnline", HTTP_GET, [](AsyncWebServerRequest *request)
     {
         request->send(200, "text/plain", (String)(WIFI_CONNECTED ? "true" : "false"));
@@ -135,23 +140,6 @@ void initServer()
     //     String sensorId = request->pathArg(0);
     //     request->send(200, "text/plain", sensorId);
     // });
-
-    server.on("/game", HTTP_GET, [] (AsyncWebServerRequest *request)
-    {
-        AsyncWebServerResponse *response;
-        if(dart.getStatus() == DartGameStatus::created)
-            dart.setStatus(DartGameStatus::started);
-
-        if(dart.getStatus() == DartGameStatus::started || dart.getStatus() == DartGameStatus::running) {
-            request->send(200, "text/plain", "Game is currently a");
-            response->addHeader("Content-Encoding","gzip");
-        } else {
-            request->send(200, "text/plain", "Game is currently not available. Current game state: " + dart.getStatusString());
-            return;
-        }
-
-        request->send(response);
-    });
 
     ws.onEvent(onEvent);
     server.addHandler(&ws);
@@ -275,14 +263,8 @@ void sendDataWs(AsyncWebSocketClient *client)
     if (!ws.count()) return;
     doc.clear();
 
-    if(dart.getStatus() == DartGameStatus::started || dart.getStatus() == DartGameStatus::running) {
-        JsonObject game = doc.createNestedObject("game");
-        dart.serialize(game);
-    } else if(dart.getStatus() == DartGameStatus::done) {
-        JsonObject g = doc.createNestedObject("g");
-        g["s"] = dart.getStatusString();
-    }
-
+    JsonObject game = doc.createNestedObject("game");
+    dart.serialize(game);
 
     if(doc.isNull())
         doc["success"] = true;
@@ -325,4 +307,14 @@ void sendDataWs(AsyncWebSocketClient *client)
     }
     buffer->unlock();
     ws._cleanBuffers();
+}
+
+unsigned long wsLastLiveTime = 0;
+
+void cleanupWs()
+{
+  if (millis() - wsLastLiveTime > 100) {
+    ws.cleanupClients(2);
+    wsLastLiveTime = millis();
+  }
 }

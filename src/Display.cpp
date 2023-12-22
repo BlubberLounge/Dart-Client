@@ -12,6 +12,21 @@ Display::Display()
     //
 }
 
+void Display::service()
+{
+    bool show = false;
+
+    if(millis() - this->lastShow > 100)
+        show = true;
+
+    if(show) {
+        this->lastShow = millis();
+        yield();
+        FastLED.show();
+    }
+
+}
+
 void Display::PointSegment::drawNumber(unsigned char chr, uint8_t origin_x, uint32_t color)
 {
     if (chr < 48 || chr > 57) return; // only ASCII 0-9 numbers supported
@@ -35,8 +50,11 @@ void Display::setPoints(int num)
         return;
 
     uint8_t offset = 0;
-    if(num < 100)
+    if(num < 10) {
+        offset = 6;
+    } else if(num < 100) {
         offset = 3;
+    }
 
     this->clearPoints();
 
@@ -48,30 +66,26 @@ void Display::setPoints(int num)
 
     for(uint8_t i = 0; i < (sizeof(chrs) / sizeof(chrs[0])); i++)
         this->points[i].drawNumber(chrs[i], ((width + space) * i) + offset, 0xffffff);
-
-    FastLED.show();
 }
 
 void Display::setPlayerIndicator(uint32_t clr)
 {
     for(int i = 5; i < 11; i++) {
+        setPixelXY(i, 15, clr);
         setPixelXY(i, 15-1, clr);
         setPixelXY(i, 15-2, clr);
         setPixelXY(i, 15-3, clr);
-        setPixelXY(i, 15-4, clr);
 
+        setPixelBri(i, 15, 64);
         setPixelBri(i, 15-1, 64);
         setPixelBri(i, 15-2, 64);
         setPixelBri(i, 15-3, 64);
-        setPixelBri(i, 15-4, 64);
     }
 
-    setPixelXY(5, 14, CRGB::Black);
-    setPixelXY(10, 14, CRGB::Black);
-    setPixelXY(5, 11, CRGB::Black);
-    setPixelXY(10, 11, CRGB::Black);
-
-    FastLED.show();
+    setPixelXY(5, 15, CRGB::Black);
+    setPixelXY(10, 15, CRGB::Black);
+    setPixelXY(5, 12, CRGB::Black);
+    setPixelXY(10, 12, CRGB::Black);
 }
 
 void Display::setThrowIndicator(uint8_t num)
@@ -84,8 +98,6 @@ void Display::setThrowIndicator(uint8_t num)
 
     for (int i = 0; i < num; i++)
         setPixelXY(14, 11 + i*2, CRGB::BlueViolet);
-
-    FastLED.show();
 }
 
 
@@ -94,6 +106,5 @@ void Display::clearPoints()
     for (int i = 0; i < 16; i++)
         for (int j = 0; j < 9; j++)
             setPixelXY(i, j, CRGB::Black);
-    FastLED.show();
 }
 

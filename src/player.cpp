@@ -85,3 +85,8 @@ void Player::setName(String name)
 {
     this->name = name;
 }
+
+void Player::setWinPos(uint8_t pos)
+{
+    this->winPos = pos;
+}

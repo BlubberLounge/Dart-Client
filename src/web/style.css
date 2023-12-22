@@ -37,7 +37,7 @@ button:hover {
     background-color: #275d97;
 }
 
-input {
+input, select {
     color: #d1d1d1;
     background-color: transparent;
     padding: .5em .725em;

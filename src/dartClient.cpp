@@ -52,6 +52,11 @@ void dartClient::loop()
 
     if(ap_active) dnsServer.processNextRequest();
 
+    cleanupWs();
+
+    // led stuff
+    display.service();
+
     MDNS.update();
 }
 
@@ -115,12 +120,12 @@ void dartClient::initConnection()
 void dartClient::initDisplay()
 {
     FastLED.setMaxPowerInVoltsAndMilliamps(5, 450);
-    FastLED.setBrightness( 8 );
+    FastLED.setBrightness( 64 );
     FastLED.addLeds<WS2812B, 4, GRB>(leds, 256);
 
     FastLED.clear();
 
-    leds[0] = CRGB::Green;
+    leds[0] = CRGB::DarkMagenta;
 
     display.setPoints(888);
     display.setPlayerIndicator(CRGB::DarkCyan);

@@ -109,7 +109,8 @@ d.addEventListener('DOMContentLoaded', function ()
 
     d.getElementById('btn-startGame').addEventListener('click', e => {
         websocketRequest({
-            gi: true
+            gi: true,
+            p: d.getElementById('points').value
         });
     });
 
@@ -145,6 +146,14 @@ d.addEventListener('DOMContentLoaded', function ()
     d.getElementById('remove').addEventListener('click', e => {
         display.pop();
         updateDisplay();
+    });
+
+    d.getElementById('abort').addEventListener('click', e => {
+        websocketRequest({
+            sc: "abort"
+        });
+
+        window.location.reload();
     });
 
     d.addEventListener("visibilitychange", () => {
@@ -201,15 +210,15 @@ function webS()
 
 	ws.onmessage = (e) => {
 		var json = JSON.parse(e.data);
-        if(json.game) {
-            if(currentPage.id != d.getElementById('page-game').id && json.game.s != "unkown")
-                showPage(d.getElementById('page-game'));
 
+        if(!initialized && json.game.s == "started")
+            initGame(json.game);
+
+        if(json.game.s == "running") {
             if(!initialized)
-                initGame(json.game);
-
-            if(initialized)
-                update(json.game);
+                initialized = true;
+            showPage(d.getElementById("page-game"));
+            update(json.game);
         }
 	};
 	ws.onclose = (e) => {

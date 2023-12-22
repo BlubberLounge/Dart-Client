@@ -37,6 +37,7 @@ class Player
 
         void setCode(String code);
         void setName(String name);
+        void setWinPos(uint8_t pos);
 };
 
 #endif
